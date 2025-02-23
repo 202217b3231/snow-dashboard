@@ -26,6 +26,7 @@ export default function UserForm({
       <Form.Item>
         <Tooltip title="Enter the user ID">
           <Input
+            size="large"
             className="input"
             name="id"
             value={form.id}
@@ -38,6 +39,7 @@ export default function UserForm({
       <Form.Item>
         <Tooltip title="Select the date range">
           <RangePicker
+            size="large"
             className="input"
             value={[
               form.startDate ? moment(form.startDate) : null,
@@ -50,19 +52,23 @@ export default function UserForm({
       <div className="buttons">
         <Form.Item>
           <Tooltip title="Add the user">
-            <Button htmlType="submit" type="primary">
+            <Button size="large" htmlType="submit" type="primary">
               Add User
             </Button>
           </Tooltip>
         </Form.Item>
         <Form.Item>
           <Tooltip title="Clear all data">
-            <Button onClick={clearData}>Clear Data</Button>
+            <Button size="large" onClick={clearData}>
+              Clear Data
+            </Button>
           </Tooltip>
         </Form.Item>
         <Form.Item>
           <Tooltip title="Copy the data">
-            <Button onClick={copyData}>Copy Data</Button>
+            <Button size="large" onClick={copyData}>
+              Copy Data
+            </Button>
           </Tooltip>
         </Form.Item>
       </div>

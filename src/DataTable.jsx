@@ -12,6 +12,17 @@ export default function DataTable({
     title: col.name,
     dataIndex: col.name.toLowerCase().replace(" ", ""),
     key: col.key,
+    render: (text, record) => {
+      const dataKey = col.name.toLowerCase().replace(" ", "");
+      const link = record[dataKey + "Url"];
+      return link ? (
+        <a href={link} target="_blank" rel="noopener noreferrer">
+          {record[dataKey]}
+        </a>
+      ) : (
+        record[dataKey]
+      );
+    },
   }));
 
   columnsConfig.push({

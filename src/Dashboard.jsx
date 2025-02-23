@@ -95,14 +95,18 @@ export default function Dashboard() {
             columns
               .map((col) => {
                 const colName = col.name.toLowerCase().replace(" ", "");
-                return user.data[colName] !== "loading"
+                return colName === "id"
+                  ? user.id
+                  : user.data[colName] !== "loading"
                   ? user.data[colName]
                   : user.id;
               })
               .join("\t")
           )
           .join("\n");
-      navigator.clipboard.writeText(tableData);
+      navigator.clipboard.writeText(tableData).then(() => {
+        message.success("Data copied to clipboard");
+      });
     };
   }, [users, columns]);
 

@@ -1,6 +1,7 @@
 :root {
   font-family: "Lucida Sans", sans-serif;
   margin: 10px 20px;
+  font-size: 18px;
 }
 
 .header {
@@ -64,4 +65,8 @@ body.dark-theme .ant-modal-confirm-paragraph * {
 body.dark-theme .ant-modal-content {
   background-color: #1e1e1e;
   color: #e0e0e0;
+}
+table,
+input {
+  font-size: 18px;
 }
