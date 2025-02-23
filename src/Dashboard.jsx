@@ -1,10 +1,19 @@
 import Navbar from "./Navbar";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import UserForm from "./UserForm";
 import DataTable from "./DataTable";
 import SettingsModal from "./SettingsModal";
 import snowIcon from "../public/snow.png";
-import { Popconfirm, Button, message, Modal } from "antd";
+import {
+  Popconfirm,
+  Button,
+  message,
+  Modal,
+  Spin,
+  ConfigProvider,
+  Space,
+  theme,
+} from "antd";
 import { ExclamationCircleFilled } from "@ant-design/icons";
 
 const { confirm } = Modal;
@@ -32,18 +41,34 @@ export default function Dashboard() {
     { name: "Personal Task", tableName: "personal_task", key: 4 },
     { name: "Jira", tableName: "issuetable", key: 5 },
   ]);
-  const [theme, setTheme] = useState("dark");
   const [loading, setLoading] = useState(false);
   const isInitialRender = useRef(true);
   const copyDataRef = useRef(() => {});
 
-  useEffect(() => {
-    document.documentElement.setAttribute("data-theme", theme);
+  const [darkMode, setDarkMode] = useState(false);
+  const windowQuery = window.matchMedia("(prefers-color-scheme:dark)");
 
+  const darkModeChange = useCallback((event) => {
+    console.log(event.matches ? true : false);
+    setDarkMode(event.matches ? true : false);
+  }, []);
+
+  useEffect(() => {
+    windowQuery.addEventListener("change", darkModeChange);
+    return () => {
+      windowQuery.removeEventListener("change", darkModeChange);
+    };
+  }, [windowQuery, darkModeChange]);
+
+  useEffect(() => {
+    console.log(windowQuery.matches ? true : false);
+    setDarkMode(windowQuery.matches ? true : false);
+  }, []);
+
+  useEffect(() => {
     if (isInitialRender.current) {
       const storedUsers = localStorage.getItem("users");
       const storedColumns = localStorage.getItem("columns");
-      const storedTheme = localStorage.getItem("theme");
 
       if (storedUsers) {
         const parsedUsers = JSON.parse(storedUsers);
@@ -51,16 +76,14 @@ export default function Dashboard() {
         parsedUsers.forEach((user, index) => user?.id && fetchRowData(index));
       }
       if (storedColumns) setColumns(JSON.parse(storedColumns));
-      if (storedTheme) setTheme(storedTheme);
       isInitialRender.current = false;
     }
-  }, [theme]);
+  }, []);
 
   useEffect(() => {
     localStorage.setItem("users", JSON.stringify(users));
     localStorage.setItem("columns", JSON.stringify(columns));
-    localStorage.setItem("theme", theme);
-  }, [users, columns, theme]);
+  }, [users, columns]);
 
   useEffect(() => {
     copyDataRef.current = () => {
@@ -83,13 +106,14 @@ export default function Dashboard() {
     };
   }, [users, columns]);
 
-  const toggleTheme = () =>
-    setTheme((prev) => (prev === "dark" ? "light" : "dark"));
+  useEffect(() => {
+    document.body.className = darkMode ? "dark-theme" : "";
+  }, [darkMode]);
 
-  const addUser = (e) => {
+  const addUser = () => {
     if (form.id) {
       setUsers((prev) => [...prev, { ...form, data: {} }]);
-      setForm({ id: "", startDate: "", endDate: "" });
+      setForm((prevForm) => ({ ...prevForm, id: "" }));
     }
   };
 
@@ -107,6 +131,13 @@ export default function Dashboard() {
       },
       onCancel() {
         message.error("Action cancelled");
+      },
+      okButtonProps: {
+        style: {
+          backgroundColor: "red",
+          borderColor: "red",
+          color: "white",
+        },
       },
     });
   };
@@ -170,7 +201,9 @@ export default function Dashboard() {
 
     columns.forEach((col) => {
       const colName = col.name.toLowerCase().replace(" ", "");
-      newData[colName] = "loading";
+      if (colName !== "id") {
+        newData[colName] = <Spin />;
+      }
     });
 
     setUsers((prevUsers) => {
@@ -235,64 +268,99 @@ export default function Dashboard() {
   };
 
   return (
-    <div>
-      <Navbar
-        snowIcon={snowIcon}
-        openOptionsPage={openOptionsPage}
-        setIsAboutModalOpen={setIsAboutModalOpen}
-        setIsModalOpen={setIsModalOpen}
-        theme={theme}
-        toggleTheme={toggleTheme}
-      />
-      <Modal
-        title="About Me"
-        open={isAboutModalOpen}
-        onOk={() => setIsAboutModalOpen(false)}
-        onCancel={() => setIsAboutModalOpen(false)}
-      >
-        <p>Himanshu</p>
-        <p>202217b3231</p>
-      </Modal>
-      <UserForm
-        handleInputChange={(e) =>
-          setForm({ ...form, [e.target.name]: e.target.value })
-        }
-        addUser={addUser}
-        clearData={clearData}
-        cancelAction={cancelAction}
-        copyData={() => copyDataRef.current()}
-        form={form}
-      />
-
-      <hr />
-      <DataTable
-        users={users}
-        columns={columns}
-        fetchRowData={fetchRowData}
-        removeUser={(index) => confirmRemoveUser(index)}
-      />
-      <SettingsModal
-        isModalOpen={isModalOpen}
-        closeModal={() => setIsModalOpen(false)}
-        snowUrl={snowUrl}
-        setSnowUrl={setSnowUrl}
-        jiraUrl={jiraUrl}
-        setJiraUrl={setJiraUrl}
-        columns={columns.map((col) => ({
-          name: col.name,
-          tableName: col.tableName,
-        }))}
-        handleColumnChange={(index, field, value) => {
-          const newColumns = [...columns];
-          newColumns[index][field] = value;
-          setColumns(newColumns);
+    <ConfigProvider
+      theme={{
+        algorithm: darkMode ? theme.darkAlgorithm : theme.defaultAlgorithm,
+      }}
+    >
+      <Space
+        direction="vertical"
+        style={{
+          width: "100%",
+          backgroundColor: darkMode ? "#121212" : "#ffffff",
+          color: darkMode ? "#e0e0e0" : "#000000",
         }}
-        addColumn={addColumn}
-        removeColumn={(index) =>
-          setColumns((prev) => prev.filter((_, i) => i !== index))
-        }
-        resetColumns={resetColumns}
-      />
-    </div>
+      >
+        <Navbar
+          snowIcon={snowIcon}
+          openOptionsPage={openOptionsPage}
+          setIsAboutModalOpen={setIsAboutModalOpen}
+          setIsModalOpen={setIsModalOpen}
+          theme={darkMode ? "dark" : "light"}
+          toggleTheme={() => setDarkMode((prev) => !prev)}
+        />
+
+        <Modal
+          title="About Me"
+          open={isAboutModalOpen}
+          onOk={() => setIsAboutModalOpen(false)}
+          onCancel={() => setIsAboutModalOpen(false)}
+        >
+          <p>Himanshu</p>
+          <p>202217b3231</p>
+        </Modal>
+        <UserForm
+          handleInputChange={(e) =>
+            setForm({ ...form, [e.target.name]: e.target.value })
+          }
+          addUser={addUser}
+          clearData={clearData}
+          cancelAction={cancelAction}
+          copyData={() => copyDataRef.current()}
+          form={form}
+        />
+
+        <hr />
+        <DataTable
+          users={users}
+          columns={columns}
+          fetchRowData={fetchRowData}
+          removeUser={(index) => confirmRemoveUser(index)}
+          renderActions={(index) => (
+            <>
+              <Button
+                color="green"
+                variant="solid"
+                onClick={() => fetchRowData(index)}
+              >
+                Fetch
+              </Button>
+              <Popconfirm
+                title={"Remove this user? " + users[index].id}
+                onConfirm={() => confirmRemoveUser(index)}
+                onCancel={cancelAction}
+                okText="Yes"
+                cancelText="No"
+              >
+                <span style={{ marginLeft: "10px" }}></span>
+                <Button danger>&times;</Button>
+              </Popconfirm>
+            </>
+          )}
+        />
+        <SettingsModal
+          isModalOpen={isModalOpen}
+          closeModal={() => setIsModalOpen(false)}
+          snowUrl={snowUrl}
+          setSnowUrl={setSnowUrl}
+          jiraUrl={jiraUrl}
+          setJiraUrl={setJiraUrl}
+          columns={columns.map((col) => ({
+            name: col.name,
+            tableName: col.tableName,
+          }))}
+          handleColumnChange={(index, field, value) => {
+            const newColumns = [...columns];
+            newColumns[index][field] = value;
+            setColumns(newColumns);
+          }}
+          addColumn={addColumn}
+          removeColumn={(index) =>
+            setColumns((prev) => prev.filter((_, i) => i !== index))
+          }
+          resetColumns={resetColumns}
+        />
+      </Space>
+    </ConfigProvider>
   );
 }

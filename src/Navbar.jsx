@@ -1,9 +1,6 @@
 import React, { createContext } from "react";
 import { FaCog, FaSun, FaMoon, FaInfoCircle, FaWrench } from "react-icons/fa";
-import { Button, Modal, Space } from "antd";
-
-const ReachableContext = createContext(null);
-const UnreachableContext = createContext(null);
+import { Modal } from "antd";
 
 const config = {
   title: "About Me!",
@@ -19,7 +16,6 @@ const config = {
 export default function Navbar({
   snowIcon,
   openOptionsPage,
-  setIsAboutModalOpen,
   setIsModalOpen,
   theme,
   toggleTheme,

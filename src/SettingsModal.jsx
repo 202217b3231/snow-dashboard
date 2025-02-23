@@ -47,6 +47,13 @@ export default function SettingsModal({
       onOk() {
         resetColumns();
       },
+      okButtonProps: {
+        style: {
+          backgroundColor: "red",
+          borderColor: "red",
+          color: "white",
+        },
+      },
     });
   };
   const handleAddColumn = () => {
@@ -107,7 +114,7 @@ export default function SettingsModal({
         <Tooltip title="Reset columns to default" key="reset-tooltip">
           <Button
             color="purple"
-            variant="outlined"
+            variant="solid"
             key="reset"
             onClick={showResetConfirm}
           >

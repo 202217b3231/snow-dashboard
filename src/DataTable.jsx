@@ -6,6 +6,7 @@ export default function DataTable({
   columns,
   fetchRowData,
   removeUser,
+  renderActions,
 }) {
   const columnsConfig = columns.map((col) => ({
     title: col.name,
@@ -16,17 +17,14 @@ export default function DataTable({
   columnsConfig.push({
     title: "Action",
     key: "action",
-    render: (text, record, index) => (
-      <Button danger onClick={() => removeUser(index)}>
-        Remove
-      </Button>
-    ),
+    render: (text, record, index) => renderActions(index),
   });
 
   return (
     <Table
       dataSource={users.map((user, index) => ({
         key: index,
+        id: user.id,
         ...user.data,
       }))}
       columns={columnsConfig}
