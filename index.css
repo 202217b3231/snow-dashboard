@@ -53,12 +53,6 @@ table,
 input {
   font-size: 18px;
 }
-
 body {
   min-width: 800px;
-}
-@media (min-width: 300px) and (max-width: 500px) {
-  body {
-    width: 800px;
-  }
 }
