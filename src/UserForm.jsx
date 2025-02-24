@@ -3,7 +3,7 @@ import { DatePicker, Form, Input, Button, Tooltip } from "antd";
 import moment from "moment";
 const { RangePicker } = DatePicker;
 import { UserOutlined } from "@ant-design/icons";
-
+const format = "YYYY-MM-DD";
 export default function UserForm({
   handleInputChange,
   addUser,
@@ -15,10 +15,9 @@ export default function UserForm({
   const handleDateChange = (dates) => {
     setForm({
       ...form,
-      startDate: dates ? dates[0].format("DD-MM-YYYY") : "",
-      enYYYYate: dates ? dates[1].format("DD-MM-YYYY") : "",
+      startDate: dates ? dates[0].format(format) : "",
+      endDate: dates ? dates[1].format(format) : "",
     });
-    console.log(dates);
   };
 
   return (
@@ -39,11 +38,14 @@ export default function UserForm({
       <Form.Item>
         <Tooltip title="Select the date range">
           <RangePicker
-            format={"DD-MM-YYYY"}
+            format={format}
             size="large"
             className="input"
             onChange={handleDateChange}
-            defaultValue={[moment(form.startDate), moment(form.endDate)]}
+            defaultValue={[
+              moment(moment(form.startDate).format(format)),
+              moment(moment(form.endDate).format(format)),
+            ]}
           />
         </Tooltip>
       </Form.Item>

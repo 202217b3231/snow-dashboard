@@ -70,3 +70,7 @@ table,
 input {
   font-size: 18px;
 }
+
+body {
+  min-width: 800px;
+}

@@ -4,6 +4,7 @@ import UserForm from "./UserForm";
 import DataTable from "./DataTable";
 import SettingsModal from "./SettingsModal";
 import snowIcon from "../public/snow.png";
+import moment from "moment";
 import {
   Popconfirm,
   Button,
@@ -24,12 +25,8 @@ export default function Dashboard() {
   const [isAboutModalOpen, setIsAboutModalOpen] = useState(false);
   const [form, setForm] = useState({
     id: "",
-    startDate: new Date(new Date().setMonth(new Date().getMonth() - 1))
-      .toISOString()
-      .split("T")[0],
-    endDate: new Date(new Date().getFullYear(), new Date().getMonth(), 0)
-      .toISOString()
-      .split("T")[0],
+    startDate: moment().subtract(1, "months").startOf("months").toDate(),
+    endDate: moment().subtract(1, "months").endOf("months").toDate(),
   });
   const [jiraUrl, setJiraUrl] = useState("https://jira.jnj.com");
   const [snowUrl, setSnowUrl] = useState("https://jnjprod.service-now.com");
@@ -197,8 +194,8 @@ export default function Dashboard() {
     if (!users[index] || !users[index].id) return;
     setLoading(true);
     const user = users[index].id;
-    const startDate = form.startDate;
-    const endDate = form.endDate;
+    const startDate = moment(form.startDate).format("YYYY-MM-DD");
+    const endDate = moment(form.endDate).format("YYYY-MM-DD");
     const templateUrls = generateTemplateUrls(user, startDate, endDate);
     const newData = { ...users[index].data };
 

@@ -1,13 +1,7 @@
 import React from "react";
-import { Table, Button } from "antd";
+import { Table } from "antd";
 
-export default function DataTable({
-  users,
-  columns,
-  fetchRowData,
-  removeUser,
-  renderActions,
-}) {
+export default function DataTable({ users, columns, renderActions }) {
   const columnsConfig = columns.map((col) => ({
     title: col.name,
     dataIndex: col.name.toLowerCase().replace(" ", ""),
