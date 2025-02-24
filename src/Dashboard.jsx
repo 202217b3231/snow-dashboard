@@ -61,7 +61,6 @@ export default function Dashboard() {
   }, [windowQuery, darkModeChange]);
 
   useEffect(() => {
-    console.log(windowQuery.matches ? true : false);
     setDarkMode(windowQuery.matches ? true : false);
   }, []);
 
@@ -312,6 +311,7 @@ export default function Dashboard() {
           cancelAction={cancelAction}
           copyData={() => copyDataRef.current()}
           form={form}
+          setForm={setForm}
         />
 
         <hr />

@@ -10,15 +10,15 @@ export default function UserForm({
   clearData,
   copyData,
   form,
-  cancelAction,
   setForm,
 }) {
   const handleDateChange = (dates) => {
     setForm({
       ...form,
-      startDate: dates ? dates[0].format("YYYY-MM-DD") : "",
-      endDate: dates ? dates[1].format("YYYY-MM-DD") : "",
+      startDate: dates ? dates[0].format("DD-MM-YYYY") : "",
+      enYYYYate: dates ? dates[1].format("DD-MM-YYYY") : "",
     });
+    console.log(dates);
   };
 
   return (
@@ -39,13 +39,11 @@ export default function UserForm({
       <Form.Item>
         <Tooltip title="Select the date range">
           <RangePicker
+            format={"DD-MM-YYYY"}
             size="large"
             className="input"
-            value={[
-              form.startDate ? moment(form.startDate) : null,
-              form.endDate ? moment(form.endDate) : null,
-            ]}
             onChange={handleDateChange}
+            defaultValue={[moment(form.startDate), moment(form.endDate)]}
           />
         </Tooltip>
       </Form.Item>
