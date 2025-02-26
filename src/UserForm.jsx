@@ -3,7 +3,8 @@ import { DatePicker, Form, Input, Button, Tooltip } from "antd";
 import moment from "moment";
 const { RangePicker } = DatePicker;
 import { UserOutlined } from "@ant-design/icons";
-const format = "MM/DD/YYYY";
+const format = "MM-DD-YYYY";
+moment.suppressDeprecationWarnings = true;
 export default function UserForm({
   handleInputChange,
   addUser,
