@@ -1,6 +1,7 @@
-import React, { createContext } from "react";
-import { FaCog, FaSun, FaMoon, FaInfoCircle, FaWrench } from "react-icons/fa";
+import React from "react";
+import { FaCog, FaSun, FaMoon, FaInfoCircle } from "react-icons/fa";
 import { Modal } from "antd";
+import { TfiFullscreen } from "react-icons/tfi";
 
 const config = {
   title: "About Me!",
@@ -35,15 +36,6 @@ export default function Navbar({
         <h1>Service Now Dashboard</h1>
       </div>
       <div className="actions">
-        <FaWrench
-          title="Open Options Page"
-          onClick={openOptionsPage}
-          style={{
-            cursor: "pointer",
-            fontSize: "24px",
-            marginRight: "10px",
-          }}
-        />
         <FaInfoCircle
           title="About me"
           onClick={() => modal.info(config)}
@@ -83,6 +75,15 @@ export default function Navbar({
             }}
           />
         )}
+        <TfiFullscreen
+          title="Open Options Page"
+          onClick={openOptionsPage}
+          style={{
+            cursor: "pointer",
+            fontSize: "24px",
+            marginRight: "10px",
+          }}
+        />
       </div>
       {contextHolder}
     </div>
