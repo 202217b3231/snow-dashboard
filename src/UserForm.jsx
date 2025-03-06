@@ -41,7 +41,6 @@ export default function UserForm({
           <RangePicker
             format={format}
             size="large"
-            className="input"
             onChange={handleDateChange}
             defaultValue={[
               moment(moment(form.startDate).format(format)),
