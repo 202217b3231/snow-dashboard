@@ -14,8 +14,8 @@ import {
 
 function App() {
   return (
-    <div className="flex w-screen h-screen bg-gray-100 fixed top-0 left-0">
-      <aside className="flex justify-between flex-col  h-full m-1 pr-1 border-r border-gray-300 ">
+    <div className="flex w-screen h-screen bg-gray-100 overflow-hidden">
+      <aside className="flex justify-between flex-col h-full m-1 pr-1 border-r border-gray-300 ">
         <div className="gap-5 flex flex-col items-center justify-center">
           <NavLink to="/" about="Home">
             <House size={20} />
@@ -36,13 +36,15 @@ function App() {
           </NavLink>
         </div>
       </aside>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/data" element={<Data />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/notes" element={<Notes />} />
-        <Route path="/settings" element={<Setting />} />
-      </Routes>
+      <main className="flex-1 h-full pb-4 pr-2">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/data" element={<Data />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/notes" element={<Notes />} />
+          <Route path="/settings" element={<Setting />} />
+        </Routes>
+      </main>
     </div>
   );
 }

@@ -1,65 +1,42 @@
-// import React, { useId } from "react";
+import { useState } from "react";
 
-// const Tabs = ({ tabs, defaultIndex = 0 }) => {
-//   const groupId = useId();
-//   return (
-//     <div className="tabs">
-//       {tabs.map((tab, idx) => (
-//         <React.Fragment key={idx}>
-//           <input
-//             type="radio"
-//             id={`${groupId}-tab${idx}`}
-//             name={groupId}
-//             className="tab-radio"
-//             defaultChecked={idx === defaultIndex}
-//           />
-//           <label htmlFor={`${groupId}-tab${idx}`} className="tab-label">
-//             {tab.label}
-//           </label>
-//         </React.Fragment>
-//       ))}
-//       {tabs.map((tab, idx) => (
-//         <div
-//           key={idx}
-//           className="tab-content"
-//           id={`${groupId}-content${idx}`}
-//           style={{ display: "none" }}
-//         >
-//           {tab.content}
-//         </div>
-//       ))}
-//       <style>{`
-//         .tab-radio { display: none; }
-//         .tab-label {
-//           display: inline-block;
-//           background: #eee;
-//           cursor: pointer;
-//           border-radius: 4px 4px 0 0;
-//           border: 1px solid #ccc;
-//           font-weight: 500;
-//         }
-//         .tab-radio:checked + .tab-label {
-//           background: #fff;
-//           border-bottom: 1px solid #fff;
-//         }
-//         .tab-content {
-//           display: none;
-//           border: 1px solid #ccc;
-//           border-radius: 0 0 4px 4px;
-//           background: #fff;
-//         }
-//         ${tabs
-//           .map(
-//             (_, idx) =>
-//               `#${groupId}-tab${idx}:checked ~ .tab-label:nth-of-type(${
-//                 idx + 1
-//               }) ~ .tab-content:nth-of-type(${idx + 1}) { display: block; }`
-//           )
-//           .join("\n")}
-//       `}</style>
-//     </div>
-//   );
-// };
+const Tabs = ({ tabs }) => {
+  const [activeTab, setActiveTab] = useState(tabs[0].id);
+
+  return (
+    <div className="w-full h-full flex flex-col">
+      <div className="flex border-b border-gray-300 bg-gray-100 rounded-t-md overflow-hidden">
+        {tabs.map((tab) => (
+          <button
+            key={tab.id}
+            className={`flex-1 px-1 py-0.5 cursor-pointer font-medium transition-colors focus:outline-none
+              ${
+                activeTab === tab.id
+                  ? "bg-teal-50 border-b-2 border-blue-500 text-blue-600"
+                  : "bg-gray-50 text-gray-500 hover:bg-gray-200"
+              }`}
+            onClick={() => setActiveTab(tab.id)}
+            aria-selected={activeTab === tab.id}
+            aria-controls={`panel-${tab.id}`}
+            id={`tab-${tab.id}`}
+            role="tab"
+            tabIndex={activeTab === tab.id ? 0 : -1}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </div>
+      <div
+        className="border border-t-0 border-gray-300 rounded-b-md p-2 w-full flex-1 overflow-auto"
+        role="tabpanel"
+        id={`panel-${activeTab}`}
+        aria-labelledby={`tab-${activeTab}`}
+      >
+        {tabs.find((tab) => tab.id === activeTab)?.content}
+      </div>
+    </div>
+  );
+};
 
 const Card = ({ children, title, className }) => {
   return (
@@ -74,4 +51,4 @@ const Card = ({ children, title, className }) => {
   );
 };
 
-export { Card };
+export { Card, Tabs };
