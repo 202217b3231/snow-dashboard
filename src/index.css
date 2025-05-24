@@ -46,80 +46,13 @@
   }
 }
 a {
-  color: var(--accent-color);
+  @apply text-teal-500;
 }
 a.active {
-  color: var(--primary-color);
+  @apply text-white rounded p-1 bg-teal-400;
 }
 
 a[about]:hover:before {
   content: attr(about);
-  position: absolute;
-  left: 2%;
-  background-color: var(--background-color);
-  background: #e0e0e0;
-  padding: 5px;
-  border-radius: 5px;
-  box-shadow: 5px 5px 20px #9d9d9d, -5px -5px 20px #ffffff;
-  color: var(--primary-color);
-  margin-left: 0.5em;
-  font-size: 0.9em;
-  font-weight: 500;
-  z-index: 1000;
-}
-.tabs {
-  display: flex;
-  flex-wrap: wrap;
-  margin: 2rem auto;
-  max-width: 70ch;
-}
-
-.tabs label {
-  background: var(--primary-bg-color);
-  color: var(--secondary-text-color);
-  cursor: pointer;
-  display: block;
-  font-weight: 600;
-  margin-right: 0.3rem;
-  order: initial;
-  padding: 1rem 2rem;
-  transition: background ease 0.3s;
-  width: 100%;
-}
-
-.tabs .tab-content {
-  background: var(--secondary-bg-color);
-  display: none;
-  flex-grow: 1;
-  padding: 1rem;
-  width: 100%;
-}
-
-.tabs input[type="radio"] {
-  display: none;
-}
-
-.tabs input[type="radio"]:checked + label {
-  background: var(--secondary-bg-color);
-  color: var(--primary-text-color);
-}
-
-.tabs input[type="radio"]:checked + label + .tab-content {
-  display: block;
-}
-
-@media (min-width: 10em) {
-  .tabs .tab-content {
-    order: 99;
-  }
-
-  .tabs label {
-    order: 1;
-  }
-
-  .tabs label {
-    margin-right: 0.3rem;
-    margin-top: 0;
-    width: auto;
-  }
+  @apply px-2 py-1 bg-teal-300 left-10 text-white rounded-md absolute z-1000;
 }

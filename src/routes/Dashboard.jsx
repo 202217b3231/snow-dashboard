@@ -1,20 +1,26 @@
 import { Card, Tabs } from "../components/myComponents.jsx";
 
 const Dashboard = () => {
-  const tabs = [
-    { id: "tab1", label: "Blueprint", content: "Blueprint content goes here" },
-    {
-      id: "tab2",
-      label: "Orchestrate",
-      content: "Orchestrate content goes here",
-    },
-  ];
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 w-full h-full grid-rows-[auto] sm:grid-rows-1 m-2 ml-0">
-      <div className="min-h-0 min-w-0 flex flex-col">
-        <Tabs tabs={tabs} className="w-full flex-1 min-h-0 min-w-0" />
+      <div className="flex flex-col">
+        <Tabs
+          tabs={[
+            {
+              id: "tab1",
+              label: "Blueprint",
+              content: "Blueprint content goes here",
+            },
+            {
+              id: "tab2",
+              label: "Orchestrate",
+              content: "Orchestrate content goes here",
+            },
+          ]}
+          className="w-full flex-1"
+        />
       </div>
-      <div className="grid grid-cols-2 gap-2 h-full min-h-0 min-w-0">
+      <div className="grid grid-cols-2 gap-2 h-full">
         <Card className="" title="Status">
           My Custom card
         </Card>

@@ -15,7 +15,7 @@ import {
 function App() {
   return (
     <div className="flex w-screen h-screen bg-gray-100 overflow-hidden">
-      <aside className="flex justify-between flex-col h-full m-1 pr-1 border-r border-gray-300 ">
+      <aside className="flex justify-between items-center flex-col h-full p-1 border-r border-teal-200 ">
         <div className="gap-5 flex flex-col items-center justify-center">
           <NavLink to="/" about="Home">
             <House size={20} />
@@ -30,7 +30,7 @@ function App() {
             <NotebookPen size={20} />
           </NavLink>
         </div>
-        <div className="pb-8">
+        <div className="pb-15 flex">
           <NavLink to="/settings" className="link" about="Settings">
             <Settings size={20} />
           </NavLink>
