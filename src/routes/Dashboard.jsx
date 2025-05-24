@@ -1,4 +1,5 @@
 import { Card, Tabs } from "../components/myComponents.jsx";
+import { Blueprint, Orchestrate } from "../components/jenkins.jsx";
 
 const Dashboard = () => {
   return (
@@ -9,12 +10,12 @@ const Dashboard = () => {
             {
               id: "tab1",
               label: "Blueprint",
-              content: "Blueprint content goes here",
+              content: <Blueprint />,
             },
             {
               id: "tab2",
               label: "Orchestrate",
-              content: "Orchestrate content goes here",
+              content: <Orchestrate />,
             },
           ]}
           className="w-full flex-1"

@@ -1,58 +1,43 @@
 @import "tailwindcss";
 
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-  color-scheme: light;
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  --primary-color: #27374d;
-  --secondary-color: #526d82;
-  --accent-color: #9db2bf;
-  --background-color: #dde6ed;
+  @apply text-base font-sans;
 }
 
 .btn {
-  border-radius: 0.2em;
-  padding: 0.2em 0.5em;
-  font-size: 1em;
-  cursor: pointer;
-  outline: none;
-  border-radius: 8px;
-  border-style: none;
-  user-select: none;
-  background-color: #42a5f5;
-  color: var(--primary-color);
+  @apply inline-block text-center bg-blue-400 text-white text-sm px-2 py-1.5 font-semibold rounded-md
+    transition-all duration-300 ease-in-out shadow-md cursor-pointer;
+
   &.success {
-    background-color: #27ae60;
-    color: var(--secondary-color);
+    @apply bg-green-400 text-white;
   }
+
   &.danger {
-    background-color: #e62143;
-    color: var(--secondary-color);
+    @apply bg-rose-400 text-white;
   }
+
   &:hover {
-    opacity: 1;
-    transform: translateY(0);
+    @apply opacity-100 shadow-lg;
+    transform: translateY(-2px);
     transition-duration: 0.35s;
-    box-shadow: rgba(39, 174, 96, 0.2) 0 6px 12px;
   }
+
   &:active {
     transform: translateY(2px);
     transition-duration: 0.35s;
   }
 }
+
 a {
   @apply text-teal-500;
-}
-a.active {
-  @apply text-white rounded p-1 bg-teal-400;
-}
 
-a[about]:hover:before {
-  content: attr(about);
-  @apply px-2 py-1 bg-teal-300 left-10 text-white rounded-md absolute z-1000;
+  &.active {
+    @apply text-white rounded p-1 bg-teal-400;
+  }
+
+  &[about]:hover:before {
+    content: attr(about);
+    @apply px-2 py-1 bg-teal-300 left-10 text-white
+      rounded-md absolute z-1000;
+  }
 }
