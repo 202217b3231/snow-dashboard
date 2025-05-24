@@ -1,0 +1,29 @@
+@import "tailwindcss";
+
+/* .tab-label {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  margin-right: 0.2rem;
+  background: #eee;
+  cursor: pointer;
+  border-radius: 4px 4px 0 0;
+  border: 1px solid #ccc;
+  border-bottom: none;
+  font-weight: 500;
+} */
+.tab-radio:checked + .tab-label {
+  background: #fff;
+  border-bottom: 1px solid #fff;
+}
+/* .tab-content {
+  display: none;
+  border: 1px solid #ccc;
+  border-radius: 0 0 4px 4px;
+  padding: 1rem;
+  background: #fff;
+  margin-top: -1px;
+} */
+#tab1:checked ~ #content1,
+#tab2:checked ~ #content2 {
+  display: block;
+}
