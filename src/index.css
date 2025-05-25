@@ -4,10 +4,23 @@
   @apply text-base font-sans;
 }
 
-.btn {
-  @apply inline-block text-center bg-blue-400 text-white text-sm px-2 py-1.5 font-semibold rounded-md
-    transition-all duration-300 ease-in-out shadow-md cursor-pointer;
+summary::marker {
+  display: none;
+}
 
+@layer components {
+  input {
+    @apply p-2 border-4 rounded m-1 focus:outline-2;
+  }
+}
+
+.btn {
+  @apply inline-block text-center text-white font-semibold
+    rounded-md transition-all duration-300 ease-in-out shadow-md cursor-pointer;
+
+  &.info {
+    @apply bg-blue-400 text-white;
+  }
   &.success {
     @apply bg-green-400 text-white;
   }
@@ -39,5 +52,18 @@ a {
     content: attr(about);
     @apply px-2 py-1 bg-teal-300 left-10 text-white
       rounded-md absolute z-1000;
+  }
+}
+
+table {
+  @apply text-xl;
+  & tr {
+    @apply p-2 rounded even:bg-teal-100 w-full gap-4;
+  }
+  & th {
+    @apply p-2  bg-teal-400 text-black/70;
+  }
+  & td {
+    @apply border p-2;
   }
 }

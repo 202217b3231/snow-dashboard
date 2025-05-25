@@ -36,7 +36,7 @@ function App() {
           </NavLink>
         </div>
       </aside>
-      <main className="flex-1 h-full pb-4 pr-2">
+      <main className="flex-1 h-full p-2 pb-5">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/data" element={<Data />} />
