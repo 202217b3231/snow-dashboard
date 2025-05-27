@@ -46,12 +46,21 @@ export default function UserForm({ onAddUser, columns, setDefaultColumns }) {
       onSubmit={handleSubmit}
       className="text-md flex flex-wrap items-center gap-5"
     >
-      <input
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-        placeholder="Username"
-        className="input m-1 input-info text-xl"
-      />
+      <label class="input">
+        <input
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          placeholder="Username"
+          required
+          className="m-1 input-info text-xl"
+        />
+        <button
+          type="submit"
+          className="label bg-info font-semibold text-info-content p-5 rounded-r-lg"
+        >
+          Add
+        </button>
+      </label>
       <DatePicker
         selectsRange
         startDate={startDate}
@@ -62,14 +71,11 @@ export default function UserForm({ onAddUser, columns, setDefaultColumns }) {
           setEndDate(end);
         }}
         isClearable
+        popperPlacement="bottom"
         dateFormat={"dd-MM-yyyy"}
         placeholderText="Select a date range"
         className="input input-accent mr-2 p-2 text-xl font-semibold rounded-md min-w-1/5"
       />
-
-      <button type="submit" className="btn btn-info text-xl p-2">
-        Add User
-      </button>
 
       <Copy
         size={40}

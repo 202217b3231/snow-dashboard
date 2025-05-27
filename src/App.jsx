@@ -12,11 +12,16 @@ import {
   Settings,
   Sun,
   Moon,
+  EyeClosed,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 
 function App() {
   const [theme, setTheme] = useState("winter");
+  const [side, setSide] = useState(false);
+  const hideSide = () => {
+    setSide(!side);
+  };
   const toggleTheme = () => {
     if (typeof window !== "undefined") {
       const themeToggle = theme === "winter" ? "dracula" : "winter";
@@ -36,8 +41,17 @@ function App() {
     }
   }, []);
   return (
-    <div className="flex w-screen h-screen overflow-hidden">
-      <aside className="flex justify-between items-center flex-col h-full p-1 gap-4">
+    <div className="flex w-screen h-screen overflow-hidden relative">
+      <EyeClosed
+        size={40}
+        className="cursor-pointer rounded-full absolute -left-2 -top-2 bg-info opacity-50 -rotate-30"
+        onClick={hideSide}
+      />
+      <aside
+        className={`${
+          side ? "flex" : "hidden"
+        } justify-between items-center flex-col h-full p-1 gap-4 mt-3`}
+      >
         <NavLink
           to="/"
           about="Home"

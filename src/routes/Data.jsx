@@ -34,7 +34,7 @@ export default function Data() {
 
   return (
     <div className="flex flex-col gap-2 w-full h-full p-3 ">
-      <Card className="min-h-fit md:h-auto overflow-y-hidden">
+      <Card className="min-h-fit md:h-auto">
         <UserForm
           onAddUser={handleAddUser}
           columns={defaultColumns}
