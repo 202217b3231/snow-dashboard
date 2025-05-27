@@ -3,8 +3,8 @@ import { Blueprint, Orchestrate } from "../components/jenkins.jsx";
 
 const Dashboard = () => {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-2 w-full h-full grid-rows-[auto] md:grid-rows-1 m-2 ml-0 p-3">
-      <div className="">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-2 w-full h-full grid-rows-[auto] md:grid-rows-1 m-0 p-1">
+      <Card className="h-full">
         <Tabs
           tabs={[
             {
@@ -19,7 +19,7 @@ const Dashboard = () => {
             },
           ]}
         />
-      </div>
+      </Card>
       <div className="grid grid-cols-2 gap-2 h-full">
         <Card className="" title="Status">
           My Custom card

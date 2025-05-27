@@ -44,13 +44,13 @@ export default function UserForm({ onAddUser, columns, setDefaultColumns }) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="space-y-2 space-x-5 text-md flex flex-wrap items-center"
+      className="text-md flex flex-wrap items-center gap-5"
     >
       <input
         value={username}
         onChange={(e) => setUsername(e.target.value)}
         placeholder="Username"
-        className="focus:outline-0 p-2 text-xl rounded-md min-w-1/5 bg-fuchsia-200  font-semibold ml-5"
+        className="input m-1 input-info text-xl"
       />
       <DatePicker
         selectsRange
@@ -64,27 +64,27 @@ export default function UserForm({ onAddUser, columns, setDefaultColumns }) {
         isClearable
         dateFormat={"dd-MM-yyyy"}
         placeholderText="Select a date range"
-        className="bg-cyan-200 mr-3  p-2 text-xl focus:outline-0 font-semibold text-center rounded-md min-w-1/5"
+        className="input input-accent mr-2 p-2 text-xl font-semibold rounded-md min-w-1/5"
       />
 
-      <button type="submit" className="btn info text-xl p-2">
+      <button type="submit" className="btn btn-info text-xl p-2">
         Add User
       </button>
 
       <Copy
         size={40}
         onClick={handleCopy}
-        className="bg-green-400 rounded text-white p-1 ml-auto cursor-copy"
+        className="btn btn-secondary rounded text-white p-1 ml-auto cursor-copy"
       />
       <Columns3Cog
         size={40}
         // onClick={() => handleColumns("New")}
         onClick={openDialog}
-        className="bg-sky-400 rounded text-white p-1 cursor-col-resize"
+        className="btn btn-primary rounded text-white p-1 cursor-col-resize"
       />
       <button
         onClick={handleClear}
-        className="btn bg-rose-400 text-xl mb-2 p-2 mr-5 cursor-vertical-text"
+        className="btn btn-error text-white text-xl p-2 mr-5 cursor-pointer"
       >
         Clear All
       </button>

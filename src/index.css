@@ -1,5 +1,11 @@
 @import "tailwindcss";
 
+@plugin "daisyui" {
+  themes: light --default, dracula, winter;
+}
+
+
+
 :root {
   @apply text-base font-sans;
 }
@@ -8,62 +14,8 @@ summary::marker {
   display: none;
 }
 
-@layer components {
-  input {
-    @apply p-2 border-4 rounded m-1 focus:outline-2;
-  }
-}
-
-.btn {
-  @apply inline-block text-center text-white font-semibold
-    rounded-md transition-all duration-300 ease-in-out shadow-md cursor-pointer;
-
-  &.info {
-    @apply bg-blue-400 text-white;
-  }
-  &.success {
-    @apply bg-green-400 text-white;
-  }
-
-  &.danger {
-    @apply bg-rose-400 text-white;
-  }
-
-  &:hover {
-    @apply opacity-100 shadow-lg;
-    transform: translateY(-2px);
-    transition-duration: 0.35s;
-  }
-
-  &:active {
-    transform: translateY(2px);
-    transition-duration: 0.35s;
-  }
-}
-
 a {
-  @apply text-teal-500;
-
   &.active {
-    @apply text-white rounded p-1 bg-teal-400;
-  }
-
-  &[about]:hover:before {
-    content: attr(about);
-    @apply px-2 py-1 bg-teal-300 left-10 text-white
-      rounded-md absolute z-1000;
-  }
-}
-
-table {
-  @apply text-xl;
-  & tr {
-    @apply p-2 rounded even:bg-teal-100 w-full gap-4;
-  }
-  & th {
-    @apply p-2  bg-teal-400 text-black/70;
-  }
-  & td {
-    @apply border p-2;
+    @apply btn btn-secondary p-1;
   }
 }

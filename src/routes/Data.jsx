@@ -60,9 +60,9 @@ function UserTable({ users, setUsers, defaultColumns }) {
 
   return (
     <>
-      <table>
+      <table className="table text-xl table-zebra">
         <thead>
-          <tr>
+          <tr className="text-xl">
             <th>User</th>
             {defaultColumns.map((col) => (
               <th key={col}>{col}</th>
