@@ -18,6 +18,7 @@ import { useEffect, useState } from "react";
 
 function App() {
   const [theme, setTheme] = useState("winter");
+  const [isDracula, setIsDracula] = useState(false);
   const [side, setSide] = useState(false);
   const hideSide = () => {
     setSide(!side);
