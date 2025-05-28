@@ -52,20 +52,37 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="flex h-screen w-screen">
-    <aside class="w-1/6">
-      <ul class="flex flex-col gap-4 p-4">
-        <router-link v-for="route in routes" :key="route.name" :to="route.url">
-          <component :is="route.icon" class="w-5 h-5" />
-        </router-link>
-      </ul>
-      <p v-on:click="setTheme" class="cursor-pointer">
-        <SunDim v-if="currentTheme === 'dim'" />
-        <Moon v-else-if="currentTheme === 'pastel'" />
-      </p>
-    </aside>
+  <div class="flex flex-col h-screen w-screen">
+    <div
+      v-on:click="setTheme"
+      class="cursor-pointer fixed right-0 rounded-xl p-0.5 z-10"
+    >
+      <SunDim v-if="currentTheme === 'dim'" />
+      <Moon v-else-if="currentTheme === 'pastel'" />
+    </div>
+    <nav
+      class="w-full h-7 group flex justify-center items-center gap-5 bg-base-300"
+    >
+      <router-link
+        v-for="route in routes"
+        :key="route.name"
+        :to="route.url"
+        v-slot="{ isActive }"
+        :data-tip="route.name"
+        class="tooltip tooltip-bottom h-10 flex flex-col items-center justify-center rounded-md group-hover:bg-base-300 transition-all duration-200"
+      >
+        <p v-if="isActive" :is="route.icon" class="fixed">{{ route.name }}</p>
+        <component
+          v-else
+          :is="route.icon"
+          class="w-7 h-7 hidden group-hover:block transition-opacity duration-200"
+        />
+      </router-link>
+    </nav>
     <main class="flex-1">
       <router-view></router-view>
     </main>
   </div>
 </template>
+
+<style scoped></style>

@@ -16,3 +16,7 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
+
+.router-link-active {
+    @apply left-10 fixed -top-2 text-xl tooltip-top;
+}
