@@ -61,7 +61,7 @@ onMounted(() => {
       <Moon v-else-if="currentTheme === 'pastel'" />
     </div>
     <nav
-      class="w-full h-7 group flex justify-center items-center gap-5 bg-base-300"
+      class="w-full h-7 group flex justify-center items-center gap-5 bg-base-200"
     >
       <router-link
         v-for="route in routes"
@@ -71,12 +71,17 @@ onMounted(() => {
         :data-tip="route.name"
         class="tooltip tooltip-bottom h-10 flex flex-col items-center justify-center rounded-md group-hover:bg-base-300 transition-all duration-200"
       >
-        <p v-if="isActive" :is="route.icon" class="fixed">{{ route.name }}</p>
         <component
-          v-else
           :is="route.icon"
           class="w-7 h-7 z-8 m-2 hidden group-hover:block transition-opacity duration-200"
         />
+        <p
+          v-if="isActive"
+          :is="route.icon"
+          class="font-medium text-lg fixed group-hover:opacity-0"
+        >
+          {{ route.name }}
+        </p>
       </router-link>
     </nav>
     <main class="flex-1">

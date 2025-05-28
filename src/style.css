@@ -17,7 +17,12 @@
     -moz-osx-font-smoothing: grayscale;
 }
 
-.router-link-active {
+/* .router-link-active {
     @apply left-[50%] fixed -top-2 text-xl tooltip-top group-hover:opacity-0;
 
+} */
+@layer components {
+    .card {
+        @apply border border-base-300 shadow-lg p-4;
+    }
 }
