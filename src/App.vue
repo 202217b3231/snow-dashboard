@@ -75,7 +75,7 @@ onMounted(() => {
         <component
           v-else
           :is="route.icon"
-          class="w-7 h-7 hidden group-hover:block transition-opacity duration-200"
+          class="w-7 h-7 z-8 m-2 hidden group-hover:block transition-opacity duration-200"
         />
       </router-link>
     </nav>

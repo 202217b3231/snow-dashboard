@@ -18,5 +18,6 @@
 }
 
 .router-link-active {
-    @apply left-10 fixed -top-2 text-xl tooltip-top;
+    @apply left-[50%] fixed -top-2 text-xl tooltip-top group-hover:opacity-0;
+
 }
