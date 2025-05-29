@@ -4,17 +4,25 @@ import { createApp } from "vue";
 import "./style.css";
 import App from "./App.vue";
 import Home from "@/views/Home.vue";
-import Dashboard from "@/views/Dashboard.vue";
-import Data from "@/views/Data.vue";
-import Notes from "@/views/Notes.vue";
-import Settings from "@/views/Settings.vue";
 
 const routes = [
   { path: "/", name: "home", component: Home },
-  { path: "/dashboard", name: "dashboard", component: Dashboard },
-  { path: "/data", name: "data", component: Data },
-  { path: "/notes", name: "notes", component: Notes },
-  { path: "/settings", name: "settings", component: Settings },
+  {
+    path: "/dashboard",
+    name: "dashboard",
+    component: () => import("@/views/Dashboard.vue"),
+  },
+  { path: "/data", name: "data", component: () => import("@/views/Data.vue") },
+  {
+    path: "/notes",
+    name: "notes",
+    component: () => import("@/views/Notes.vue"),
+  },
+  {
+    path: "/settings",
+    name: "settings",
+    component: () => import("@/views/Settings.vue"),
+  },
 ];
 
 const router = createRouter({

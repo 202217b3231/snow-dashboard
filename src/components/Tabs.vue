@@ -1,7 +1,7 @@
 <script setup>
 defineProps({
   tabs: {
-    type: Array, // Array of objects: { label: String, initialChecked?: Boolean, idSuffix: String, fullHeightContent?: Boolean }
+    type: Array,
     required: true,
     validator: (value) =>
       value.every(
