@@ -23,6 +23,6 @@
 } */
 @layer components {
     .card {
-        @apply border border-base-300 shadow-lg p-4;
+        @apply border border-base-300 bg-base-200 shadow-lg p-4;
     }
 }
