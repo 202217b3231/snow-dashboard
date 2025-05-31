@@ -12,6 +12,21 @@
             <option value="h4">H4</option>
         </select>
         <button
+            @click="editor.chain().focus().setFontSize('20px').run()"
+            class="tooltip tooltip-bottom"
+            data-tip="Increase Font Size"
+        >
+            <span>A+</span>
+        </button>
+        <button
+            @click="editor.chain().focus().setFontSize('12px').run()"
+            class="tooltip tooltip-bottom"
+            data-tip="Decrease Font Size"
+        >
+            <span>A-</span>
+        </button>
+
+        <button
             @click="editor.chain().focus().toggleBold().run()"
             :class="{ active: editor.isActive('bold') }"
         >
@@ -123,6 +138,8 @@
 </template>
 
 <script setup>
+import { computed } from "vue";
+
 import {
     Undo,
     Redo,
@@ -138,12 +155,29 @@ import {
     Highlighter,
 } from "lucide-vue-next";
 
-defineProps({
+const props = defineProps({
     editor: {
         type: Object,
         required: true,
     },
 });
+const currentHeading = computed(() => {
+    if (props.editor.isActive("heading", { level: 1 })) return "h1";
+    if (props.editor.isActive("heading", { level: 2 })) return "h2";
+    if (props.editor.isActive("heading", { level: 3 })) return "h3";
+    if (props.editor.isActive("heading", { level: 4 })) return "h4";
+    return "";
+});
+
+function onHeadingChange(event) {
+    const value = event.target.value;
+    if (!value) {
+        props.editor.chain().focus().setParagraph().run();
+        return;
+    }
+    const level = parseInt(value.slice(1));
+    props.editor.chain().focus().toggleHeading({ level }).run();
+}
 </script>
 
 <style scoped>

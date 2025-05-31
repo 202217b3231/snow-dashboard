@@ -53,12 +53,12 @@
         h4,
         h5,
         h6 {
-            @apply leading-[1.1] mt-10 text-pretty font-bold;
+            @apply leading-[1.1] mt-3 mb-1 text-pretty font-bold;
         }
 
         h1,
         h2 {
-            @apply mt-14 mb-6;
+            @apply mt-5 mb-3;
         }
 
         h1 {
@@ -79,20 +79,20 @@
             @apply text-[1rem];
         }
 
-        code {
-            @apply bg-base-300 rounded text-base-content text-sm p-1;
+        code:not(pre code) {
+            @apply bg-base-200 text-base-content text-xs p-1;
         }
 
         pre {
-            @apply bg-base-300 text-accent mx-1 p-1;
+            @apply bg-base-200 border text-xs rounded mx-1 p-1;
+        }
 
-            code {
-                @apply bg-none text-sm p-0;
-            }
+        pre code {
+            @apply bg-transparent p-0;
         }
 
         mark {
-            @apply text-blue-500 bg-base-300 text-xl font-semibold rounded-lg px-0.5 py-1;
+            @apply bg-warning/50 text-warning-content font-semibold rounded-lg  mt-5 mb-3;
         }
 
         blockquote {

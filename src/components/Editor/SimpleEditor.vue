@@ -17,6 +17,8 @@ import TextAlign from "@tiptap/extension-text-align";
 import Typography from "@tiptap/extension-typography";
 import Highlight from "@tiptap/extension-highlight";
 
+import { FontSize } from "./font-size.js";
+
 const editor = ref(
     new Editor({
         extensions: [
@@ -29,6 +31,7 @@ const editor = ref(
             TextAlign.configure({
                 types: ["heading", "paragraph"],
             }),
+            FontSize,
         ],
         content: "<p>Hello <b>World!</b></p>",
     }),
