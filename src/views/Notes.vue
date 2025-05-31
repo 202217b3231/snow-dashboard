@@ -1,6 +1,5 @@
 <script setup>
 import { onMounted, ref } from "vue";
-import TipTapEditor from "@/components/TipTapEditor.vue";
 import { Trash } from "lucide-vue-next";
 const debounce = (func, delay) => {
     let timeout;
@@ -110,7 +109,6 @@ const debouncedSavedNotes = debounce(saveNotes, 1000);
         </aside>
         <section class="flex flex-1 flex-col p-3">
             <template v-if="selectedNote">
-                <TipTapEditor></TipTapEditor>
                 <textarea
                     class="border rounded w-full h-full bg-base-200"
                     v-model="selectedNote.content"

@@ -1,9 +1,8 @@
+<script setup>
+import Editor from "@/components/SimpleEditor.vue";
+</script>
 <template>
     <div class="p-5">
-        <Editor></Editor>
+        <Editor />
     </div>
 </template>
-
-<script setup>
-import Editor from "@/components/Editor/SimpleEditor.vue";
-</script>
