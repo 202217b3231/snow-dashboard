@@ -6,6 +6,7 @@ import {
   LayoutDashboard as DashboardIcon,
   NotebookTabs as NotesIcon,
   Settings as SettingsIcon,
+  DatabaseZap as DataIcon,
   Eye,
   SunDim,
   Moon,
@@ -21,6 +22,11 @@ const routes = [
     url: "/dashboard",
     name: "Dashboard",
     icon: DashboardIcon,
+  },
+  {
+    url: "/data",
+    name: "Data",
+    icon: DataIcon,
   },
   {
     url: "/notes",

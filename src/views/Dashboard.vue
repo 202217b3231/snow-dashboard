@@ -1,6 +1,9 @@
 <script setup>
+import { ref } from "vue";
 import Tabs from "../components/Tabs.vue";
-
+import Blueprint from "@/components/TheBlueprint.vue";
+import Orchestrate from "@/components/TheBlueprint.vue";
+import SelectBlueprint from "@/components/TheBlueprint.vue";
 const Stats = [
   {
     name: "Blueprint",
@@ -20,28 +23,31 @@ const blueprintTabsData = [
   {
     label: "Blueprint",
     initialChecked: true,
-    idSuffix: "blueprintContent",
-    fullHeightContent: false,
+    id: "blueprint",
   },
   {
     label: "Orchestrate",
-    idSuffix: "orchestrateContent",
-    fullHeightContent: true,
+    id: "orchestrate",
   },
 ];
 const errorTabsData = [
   {
     label: "Select Blueprint",
     initialChecked: true,
-    idSuffix: "selectBlueprintContent",
-    fullHeightContent: false,
+    id: "selectBlueprint",
   },
   {
     label: "Error",
-    idSuffix: "errorContent",
-    fullHeightContent: true,
+    id: "error",
   },
 ];
+const placename = ref("Filter");
+const handlerefetch = () => {
+  placename.value = "Loading....";
+  setTimeout(() => {
+    placename.value = "Filter";
+  }, 1000);
+};
 </script>
 
 <template>
@@ -50,8 +56,11 @@ const errorTabsData = [
   >
     <div class="card sm:row-span-2 row-span-1 col-span-2 p-0">
       <Tabs name="blueprintTab" :tabs="blueprintTabsData">
-        <template #tab-content-blueprintContent> Tab content 1 </template>
-        <template #tab-content-orchestrateContent> Tab content 2 </template>
+        <template #blueprint>
+          <Blueprint :refetch="handlerefetch" :placelabel="placename">
+          </Blueprint>
+        </template>
+        <template #orchestrate> <Orchestrate></Orchestrate></template>
       </Tabs>
     </div>
     <div class="card col-span-1">
@@ -78,11 +87,14 @@ const errorTabsData = [
     <div class="card col-span-1">
       <h1 class="card-title">Rhel Version</h1>
     </div>
+
     <div class="card col-span-2 p-0 relative">
-      <p class="absolute right-[50%] top-3">Selected</p>
       <Tabs name="errorTab" :tabs="errorTabsData">
-        <template #tab-content-selectBlueprintContent> Tab content 1 </template>
-        <template #tab-content-errorContent> Tab content 2 </template>
+        <template #selectBlueprint>
+          <SelectBlueprint placelabel="Selected Blueprint" />
+        </template>
+
+        <template #error> Tab content 2 </template>
       </Tabs>
     </div>
   </div>

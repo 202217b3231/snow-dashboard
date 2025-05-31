@@ -1,10 +1,9 @@
 <template>
-  <button class="btn btn-neutral">Neutral</button>
-  <button class="btn btn-primary">Primary</button>
-  <button class="btn btn-secondary">Secondary</button>
-  <button class="btn btn-accent">Accent</button>
-  <button class="btn btn-info">Info</button>
-  <button class="btn btn-success">Success</button>
-  <button class="btn btn-warning">Warning</button>
-  <button class="btn btn-error">Error</button>
+  <p>
+    Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusantium
+    praesentium vel, eos saepe facere ullam doloribus reprehenderit magni
+    commodi. Dolore reprehenderit expedita facere nam culpa. Molestiae optio
+    deserunt aut vel esse minima natus inventore similique modi animi officia ab
+    hic fugiat, autem vero assumenda dolor earum expedita atque ipsa odio!
+  </p>
 </template>
