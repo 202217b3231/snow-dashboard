@@ -1,7 +1,11 @@
 @import "tailwindcss";
 
 @plugin "daisyui" {
-    themes: lights --default, pastel, dim, dark;
+    themes:
+        lights --default,
+        pastel,
+        dim,
+        dark;
 }
 
 :root {
@@ -24,5 +28,79 @@
 @layer components {
     .card {
         @apply border border-base-300 bg-base-200 shadow-lg p-4;
+    }
+    button {
+        @apply btn;
+        &.active {
+            @apply bg-primary text-primary-content;
+        }
+    }
+    .editor-content {
+        @apply bg-base-200;
+    }
+    .tiptap {
+        @apply prose p-3;
+        ul,
+        ol {
+            @apply pl-4 pr-4 mt-5 mb-5 ml-1.5 list-decimal;
+            li p {
+                @apply mt-1 mb-1;
+            }
+        }
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            @apply leading-[1.1] mt-3 mb-1 text-pretty font-bold;
+        }
+
+        h1,
+        h2 {
+            @apply mt-5 mb-3;
+        }
+
+        h1 {
+            @apply text-[1.4rem];
+        }
+
+        h2 {
+            @apply text-[1.2rem];
+        }
+
+        h3 {
+            @apply text-[1.1rem];
+        }
+
+        h4,
+        h5,
+        h6 {
+            @apply text-[1rem];
+        }
+
+        code:not(pre code) {
+            @apply bg-base-200 text-base-content text-xs p-1;
+        }
+
+        pre {
+            @apply bg-base-200 border text-xs rounded mx-1 p-1;
+        }
+
+        pre code {
+            @apply bg-transparent p-0;
+        }
+
+        mark {
+            @apply bg-warning/50 text-warning-content font-semibold rounded-lg  mt-5 mb-3;
+        }
+
+        blockquote {
+            @apply border-l-5 border-base-300 bg-base-200 mx-3 pl-4;
+        }
+
+        hr {
+            @apply border-t-3 border-base-300 mx-8;
+        }
     }
 }

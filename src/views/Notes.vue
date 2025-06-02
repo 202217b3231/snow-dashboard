@@ -111,7 +111,6 @@ const debouncedSavedNotes = debounce(saveNotes, 1000);
           v-model="selectedNote.content"
           @input="debouncedSavedNotes"
         ></textarea>
-        <RichTextEditorComponent />
       </template>
       <p v-else>Select a note</p>
     </section>
