@@ -1,7 +1,6 @@
 <script setup>
 import { onMounted, ref } from "vue";
 import { Trash } from "lucide-vue-next";
-import RichTextEditorComponent from "@syncfusion/ej2-vue-richtexteditor";
 
 const debounce = (func, delay) => {
   let timeout;

@@ -3,7 +3,7 @@
 @plugin "daisyui" {
     themes:
         lights --default,
-        pastel,
+        cupcake,
         dim,
         dark;
 }
@@ -29,24 +29,35 @@
     .card {
         @apply border border-base-300 bg-base-200 shadow-lg p-4;
     }
+
     button {
         @apply btn;
+
         &.active {
             @apply bg-primary text-primary-content;
         }
     }
-    .editor-content {
-        @apply bg-base-200;
-    }
+
     .tiptap {
-        @apply prose p-3;
+        @apply p-4;
+
         ul,
         ol {
-            @apply pl-4 pr-4 mt-5 mb-5 ml-1.5 list-decimal;
+            @apply pl-4 pr-4 mt-5 mb-5 ml-1.5;
+
             li p {
                 @apply mt-1 mb-1;
             }
         }
+
+        ul {
+            list-style-type: disc;
+        }
+
+        ol {
+            list-style-type: decimal;
+        }
+
         h1,
         h2,
         h3,
@@ -73,9 +84,7 @@
             @apply text-[1.1rem];
         }
 
-        h4,
-        h5,
-        h6 {
+        h4 {
             @apply text-[1rem];
         }
 
@@ -84,7 +93,7 @@
         }
 
         pre {
-            @apply bg-base-200 border text-xs rounded mx-1 p-1;
+            @apply bg-base-200 border border-base-300 w-fit text-xs rounded mx-1 p-1;
         }
 
         pre code {
@@ -92,11 +101,11 @@
         }
 
         mark {
-            @apply bg-warning/50 text-warning-content font-semibold rounded-lg  mt-5 mb-3;
+            @apply bg-warning rounded-lg m-1.5 p-0.5;
         }
 
         blockquote {
-            @apply border-l-5 border-base-300 bg-base-200 mx-3 pl-4;
+            @apply border-l-5 border-primary bg-base-200 mx-3 pl-4;
         }
 
         hr {

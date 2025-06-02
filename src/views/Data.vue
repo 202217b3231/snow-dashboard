@@ -129,6 +129,7 @@ const addUser = () => {
 
 const clearData = () => {
   users.value = [];
+  saveUsers.save(users.value);
 };
 
 const refreshUser = (userId) => {
