@@ -1,6 +1,8 @@
 <script setup>
 import { onMounted, ref } from "vue";
 import { Trash } from "lucide-vue-next";
+import RichTextEditorComponent from "@syncfusion/ej2-vue-richtexteditor";
+
 const debounce = (func, delay) => {
   let timeout;
   return (...args) => {
@@ -109,6 +111,7 @@ const debouncedSavedNotes = debounce(saveNotes, 1000);
           v-model="selectedNote.content"
           @input="debouncedSavedNotes"
         ></textarea>
+        <RichTextEditorComponent />
       </template>
       <p v-else>Select a note</p>
     </section>
