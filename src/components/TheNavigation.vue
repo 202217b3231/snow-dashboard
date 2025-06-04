@@ -69,11 +69,11 @@ const handleKeyNavigation = (event) => {
     router.push(nextRoute.url);
   }
 };
-const currentTheme = ref("cupcake");
+const currentTheme = ref("nord");
 const isMenu = ref(true);
 
 const setTheme = () => {
-  const newtheme = currentTheme.value === "dim" ? "cupcake" : "dim";
+  const newtheme = currentTheme.value === "dim" ? "nord" : "dim";
   if (typeof document !== "undefined") {
     document.documentElement.setAttribute("data-theme", newtheme);
     localStorage.setItem("theme", newtheme);
@@ -87,7 +87,7 @@ onMounted(() => {
     if (getMenu) {
       isMenu.value = getMenu === "true";
     }
-    if (getTheme === "cupcake" || getTheme === "dim") {
+    if (getTheme === "nord" || getTheme === "dim") {
       currentTheme.value = getTheme;
       document.documentElement.setAttribute("data-theme", getTheme);
     }
@@ -115,7 +115,7 @@ onUnmounted(() => {
     class="cursor-pointer fixed right-0 rounded-xl p-0.5 z-10"
   >
     <SunDim v-if="currentTheme === 'dim'" />
-    <Moon v-else-if="currentTheme === 'cupcake'" />
+    <Moon v-else-if="currentTheme === 'nord'" />
   </div>
   <nav
     v-if="isMenu"

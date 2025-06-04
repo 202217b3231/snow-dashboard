@@ -2,7 +2,7 @@
 
 @plugin "daisyui" {
     themes:
-        cupcake --default,
+        nord --default,
         dim,
         dark;
 }

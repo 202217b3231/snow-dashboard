@@ -44,9 +44,9 @@
           class="cursor-pointer hover:bg-base-100 active:bg-base-300"
           :class="
             item.status === 'FAILED'
-              ? 'text-error '
+              ? 'text-red-500 '
               : item.status === 'SUCCESS'
-              ? 'text-success'
+              ? 'text-green-500'
               : ''
           "
           @click="$emit('selectBlueprint', item)"
