@@ -41,50 +41,73 @@
 </template>
 
 <script setup>
-import { computed, ref, watch } from "vue";
+import { computed, ref, watchEffect } from "vue";
 
 const props = defineProps({
   data: {
     type: Object,
     default: () => null,
   },
+  isActive: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const loading = ref(false);
-
 const Errors = ref([]);
-
 const baseJenkinsLink = "https://jenkins.eat.jnj.com";
 const jenkinsJobLink = ref("");
-let consoleLink = "";
+const consoleLink = ref("");
+
 const errorDetails = computed(() =>
   props.data?.status?.toLowerCase() === "failed" ? props.data : null
 );
 
-watch(
-  errorDetails,
-  (newErrorData) => {
-    if (newErrorData && newErrorData._links?.self?.href) {
-      const newLink = baseJenkinsLink + newErrorData._links.self.href;
-      jenkinsJobLink.value = newLink.replace("wfapi/describe", "consoleText");
-      consoleLink = newLink.replace("wfapi/describe", "console");
-      fetchError(jenkinsJobLink.value);
-      console.log("Error detected. Jenkins link:", jenkinsJobLink.value);
+watchEffect(() => {
+  const currentError = errorDetails.value;
+
+  if (currentError && currentError._links?.self?.href) {
+    const newBaseLink = baseJenkinsLink + currentError._links.self.href;
+    const newJenkinsJobLink = newBaseLink.replace(
+      "wfapi/describe",
+      "consoleText"
+    );
+    const newConsoleLink = newBaseLink.replace("wfapi/describe", "console");
+
+    jenkinsJobLink.value = newJenkinsJobLink;
+    consoleLink.value = newConsoleLink;
+
+    if (props.isActive) {
+      console.log(
+        "ErrorCard: Tab is active and error details present. Fetching logs for:",
+        newJenkinsJobLink
+      );
+      fetchError(newJenkinsJobLink);
     } else {
-      jenkinsJobLink.value = "";
+      console.log(
+        "ErrorCard: Error details present, but tab is not active. Logs will be fetched when tab becomes active. Link:",
+        newJenkinsJobLink
+      );
     }
-  },
-  { immediate: true }
-);
+  } else {
+    jenkinsJobLink.value = "";
+    consoleLink.value = "";
+    Errors.value = [];
+    loading.value = false;
+    console.log("ErrorCard: No error details to display or fetch.");
+  }
+});
 
 const fetchError = async (url) => {
+  if (!url) {
+    Errors.value = ["Error: No Jenkins URL provided to fetch logs."];
+    loading.value = false;
+    return;
+  }
   loading.value = true;
   Errors.value = [];
   try {
-    if (!url) {
-      Errors.value = ["Error: No Jenkins URL provided to fetch logs."];
-      return;
-    }
     const res = await fetch(url);
     if (!res.ok) {
       Errors.value = [
@@ -98,16 +121,16 @@ const fetchError = async (url) => {
 
     let rawText = await res.text();
 
-    const ansiRegex =
-      /[\u001b\u009b][[()#;?]*.?[0-9A-Za-z]?([A-Za-z0-9@=><~]){0,3}(?:;[0-9A-Za-z@=><~]{0,3})*[@-~]/g;
-    const cleanText = rawText.replace(ansiRegex, "");
-
-    const errorLines = cleanText
+    const errorLines = rawText
       .split("\n")
       .filter((line) => line.toLowerCase().includes("error:"));
 
     if (errorLines.length > 0) {
       Errors.value = errorLines;
+    } else {
+      Errors.value = [
+        "No specific 'error:' lines found in logs. Check full logs.",
+      ]; // Optional: message if no "error:" lines
     }
   } catch (error) {
     console.error("Error fetching Jenkins console text:", error);

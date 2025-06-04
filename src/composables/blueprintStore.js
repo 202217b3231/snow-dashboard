@@ -16,7 +16,7 @@ export const useBlueprintStore = defineStore("blueprintAllData", () => {
           `Failed to fetch data from ${url}. Status: ${response.status}`
         );
       }
-      return response.json();
+      return response.json() ?? response.text();
     } catch (error) {
       console.log(error);
     }
@@ -25,15 +25,14 @@ export const useBlueprintStore = defineStore("blueprintAllData", () => {
     if (!Array.isArray(blueprints)) {
       return [];
     }
-    const searchTerm = filterTerm.value.toLowerCase().trim();
+    const searchTerm = filterTerm.trim().toLowerCase();
     if (!searchTerm) {
       return blueprints;
     }
 
     const individualFilterTerms = searchTerm
-      .split(",")
-      .map((term) => term.trim())
-      .filter((term) => term.length > 0);
+      .split(" ")
+      .map((term) => term.trim());
 
     if (individualFilterTerms.length === 0) {
       return blueprints;
@@ -41,10 +40,8 @@ export const useBlueprintStore = defineStore("blueprintAllData", () => {
     return blueprints.filter((blueprint) => {
       return individualFilterTerms.every(
         (filterTerm) =>
-          (blueprint.name &&
-            blueprint.name.toLowerCase().includes(filterTerm)) ||
-          (blueprint.status &&
-            blueprint.status.toLowerCase().includes(filterTerm))
+          blueprint?.name?.toLowerCase().includes(filterTerm) ||
+          blueprint?.status?.toLowerCase().includes(filterTerm)
       );
     });
   };
@@ -55,5 +52,5 @@ export const useBlueprintStore = defineStore("blueprintAllData", () => {
     };
   });
 
-  return { allData, filterData };
+  return { allData, filterData, fetchData };
 });

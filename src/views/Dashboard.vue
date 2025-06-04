@@ -6,6 +6,7 @@ import Orchestrate from "@/components/dashboard/TheBlueprint.vue";
 import SelectBlueprint from "@/components/dashboard/TheBlueprint.vue";
 import ErrorCard from "@/components/dashboard/ErrorCard.vue";
 import StatusCard from "@/components/dashboard/StatusCard.vue";
+import RhelCard from "@/components/dashboard/RhelCard.vue";
 
 const blueprintTabsData = [
   {
@@ -31,29 +32,9 @@ const errorTabsData = [
 ];
 
 const selectedBlueprintData = ref(null);
-
 const handleBlueprintSelected = (data) => {
   selectedBlueprintData.value = data;
   console.log(selectedBlueprintData.value);
-};
-
-const loadStatsData = (dataStat) => {
-  console.log("Received statData from child:", dataStat);
-  const statEntry = Stats.value.find(
-    (s) => s.name.toLowerCase() === dataStat.name.toLowerCase()
-  );
-
-  if (statEntry && dataStat.stats) {
-    statEntry.failed = dataStat.stats.FAILED || 0;
-    statEntry.in_progress = dataStat.stats.IN_PROGRESS || 0; // Jenkins uses IN_PROGRESS
-    statEntry.success = dataStat.stats.SUCCESS || 0;
-  } else {
-    console.warn(
-      "Could not find stat type or missing stats in child data:",
-      dataStat.name,
-      dataStat.stats
-    );
-  }
 };
 </script>
 
@@ -61,27 +42,25 @@ const loadStatsData = (dataStat) => {
   <div
     class="grid grid-cols-2 grid-rows-3 h-full p-3 gap-3 sm:grid-cols-4 sm:grid-rows-2 max-h-[98vh]"
   >
-    <div class="card sm:row-span-2 row-span-1 col-span-2 p-0">
+    <div class="card sm:row-span-2 row-span-1 col-span-2 p-0 z-0">
       <Tabs name="blueprintTab" :tabs="blueprintTabsData">
         <template #blueprint>
           <Blueprint
             :refetch="true"
             placelabel="blueprint"
             @selectBlueprint="handleBlueprintSelected"
-          ></Blueprint>
+          />
         </template>
         <template #orchestrate>
-          <Orchestrate
-            placelabel="orchesetrate"
-            @statData="loadStatsData"
-          ></Orchestrate
-        ></template>
+          <Orchestrate placelabel="orchestrate"
+        /></template>
       </Tabs>
     </div>
-    <status-card></status-card>
+    <status-card />
 
     <div class="card col-span-1">
       <h1 class="card-title">Rhel Version</h1>
+      <rhel-card />
     </div>
 
     <div class="card col-span-2 p-0 relative">
@@ -100,13 +79,3 @@ const loadStatsData = (dataStat) => {
     </div>
   </div>
 </template>
-
-<style scoped>
-label {
-  display: grid;
-  & span {
-    font-weight: bold;
-    font-size: 1.5em;
-  }
-}
-</style>

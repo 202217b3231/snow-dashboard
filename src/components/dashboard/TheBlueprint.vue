@@ -13,7 +13,7 @@
       <button
         class="label cursor-pointer"
         v-if="props.refetch"
-        @click="handlerefetch"
+        @click="handleRefresh"
       >
         🔃&#65038;
       </button>
@@ -27,9 +27,10 @@
           <th>Name</th>
         </tr>
       </thead>
-      <div v-if="loading" class="text-center p-4 col-span-full">
-        Loading data...
-      </div>
+      <span
+        v-if="loading"
+        class="loading loading-bars loading-lg text-info"
+      ></span>
       <div
         v-else-if="fetchError"
         class="text-center p-4 text-error col-span-full"
@@ -39,7 +40,7 @@
       <tbody v-else-if="TheData.length > 0">
         <tr
           v-for="(item, index) in TheData"
-          :key="item.id || index"
+          :key="index"
           class="cursor-pointer hover:bg-base-100 active:bg-base-300"
           :class="
             item.status === 'FAILED'
@@ -65,17 +66,18 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, watch } from "vue";
+import { ref, computed, onMounted } from "vue";
 import { format } from "date-fns";
 import { useBlueprintStore } from "@/composables/blueprintStore";
 
-const emit = defineEmits(["selectBlueprint", "statData"]);
 const dataStore = useBlueprintStore();
+
+const emit = defineEmits(["selectBlueprint", "statData"]);
 
 const fetchedApiData = ref(null);
 
 const filterSearchTerm = ref("");
-const loading = ref(true);
+const loading = ref(false);
 const fetchError = ref(null);
 
 const props = defineProps({
@@ -94,38 +96,27 @@ const TheData = computed(() => {
   let sourceDataArray = [];
   if (props.placelabel === "blueprint") {
     sourceDataArray = fetchedApiData.value?.blueprint || [];
-  } else if (props.placelabel === "orchestrate") {
+  }
+  if (props.placelabel === "orchestrate") {
     sourceDataArray = fetchedApiData.value?.orchestrate || [];
-  } else if (props.data?.stages) {
+  }
+  if (props.data?.stages) {
     if (Array.isArray(props.data.stages)) {
       sourceDataArray = props.data.stages;
     } else {
-      console.warn(
-        "TheBlueprint: props.data.stages was provided but is not an array.",
-        props.data.stages
-      );
+      console.log(props.data.stages);
       sourceDataArray = [];
     }
   }
-  return filteredData(sourceDataArray);
+  return dataStore.filterData(sourceDataArray, filterSearchTerm.value);
 });
 
-const filteredData = (sourceArray) => {
-  if (!Array.isArray(sourceArray)) return [];
-  if (!filterSearchTerm.value) {
-    return sourceArray;
-  }
-  const searchTerm = filterSearchTerm.value.toLowerCase();
-  return sourceArray.filter(
-    (item) => item.name && item.name.toLowerCase().includes(searchTerm)
-  );
-};
-
 const fetchData = async () => {
-  loading.value = true;
   fetchError.value = null;
+  loading.value = true;
   try {
-    fetchedApiData.value = await dataStore.allData();
+    fetchedApiData.value = await dataStore.allData;
+    console.log("Fetch data.");
   } catch (e) {
     console.error("TheBlueprint: Failed to fetch data:", e);
     fetchError.value =
@@ -135,11 +126,19 @@ const fetchData = async () => {
   }
 };
 
-const handlerefetch = async () => {
-  await fetchData();
-  console.log("Data after refetch:", fetchedApiData.value);
-  console.log("TheData computed value:", TheData.value);
-};
+async function handleRefresh() {
+  loading.value = true;
+  try {
+    fetchedApiData.value = await dataStore.allData;
+    console.log(fetchedApiData.value);
+  } catch (error) {
+    console.error("Error fetching data", error);
+  } finally {
+    if (fetchedApiData.value) {
+      loading.value = false;
+    }
+  }
+}
 
 onMounted(() => {
   if (
