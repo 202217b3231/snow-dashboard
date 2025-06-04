@@ -2,8 +2,7 @@
 
 @plugin "daisyui" {
     themes:
-        lights --default,
-        cupcake,
+        cupcake --default,
         dim,
         dark;
 }
@@ -21,25 +20,17 @@
     -moz-osx-font-smoothing: grayscale;
 }
 
-/* .router-link-active {
-    @apply left-[50%] fixed -top-2 text-xl tooltip-top group-hover:opacity-0;
-
-} */
 @layer components {
     .card {
-        @apply border border-base-300 bg-base-200 shadow-lg p-4;
-    }
-
-    button {
-        @apply btn;
-
-        &.active {
-            @apply bg-primary text-primary-content;
-        }
+        @apply border border-base-300 bg-base-200 p-4 rounded-lg;
     }
 
     .tiptap {
-        @apply p-4;
+        @apply min-h-[300px] leading-relaxed border border-base-300 shadow-lg outline-none p-4;
+
+        .tiptap {
+            @apply min-h-[300px] leading-relaxed border border-base-300 shadow-lg outline-none p-4;
+        }
 
         ul,
         ol {
@@ -89,11 +80,11 @@
         }
 
         code:not(pre code) {
-            @apply bg-base-200 text-base-content text-xs p-1;
+            @apply bg-base-200 text-base-content text-sm rounded-md p-1;
         }
 
         pre {
-            @apply bg-base-200 border border-base-300 w-fit text-xs rounded mx-1 p-1;
+            @apply bg-base-200 border border-base-300 overflow-x-auto rounded p-3 my-2;
         }
 
         pre code {
@@ -101,7 +92,7 @@
         }
 
         mark {
-            @apply bg-warning rounded-lg m-1.5 p-0.5;
+            @apply bg-warning rounded-md p-0.5;
         }
 
         blockquote {
@@ -111,5 +102,38 @@
         hr {
             @apply border-t-3 border-base-300 mx-8;
         }
+
+
     }
+
+    .editor-container {
+        @apply bg-base-100 p-2;
+    }
+
+    .toolbar {
+        @apply flex flex-wrap gap-2 mb-4 bg-base-100 rounded-md p-2 border-b border-base-200 items-center;
+    }
+
+    .toolbar-btn {
+        @apply btn btn-ghost rounded px-1.5;
+    }
+
+    .toolbar-btn.is-active,
+    .toolbar-btn:active {
+        @apply bg-accent text-accent-content;
+    }
+
+    .toolbar-btn:disabled {
+        @apply opacity-50 cursor-not-allowed;
+    }
+
+    .toolbar-select {
+        @apply border border-base-300 rounded-md p-1 mx-2;
+    }
+
+    input[type="color"] {
+        @apply w-8 h-8 border border-base-300 rounded-md p-0.5 cursor-pointer;
+    }
+
+
 }

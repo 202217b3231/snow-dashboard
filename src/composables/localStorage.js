@@ -11,9 +11,14 @@ export default class useLocalStorage {
   }
   load() {
     try {
-      localStorage.getItem(this.key);
+      const item = localStorage.getItem(this.key);
+      if (item === null) {
+        return null;
+      }
+      return JSON.parse(item);
     } catch (error) {
       console.log(error);
+      return null;
     }
   }
   remove() {

@@ -121,10 +121,12 @@ onUnmounted(() => {
     v-if="isMenu"
     class="w-full h-7 flex justify-center items-center gap-5 bg-base-200 group"
   >
-    <span class="opacity-10 group-hover:opacity-70 fixed top-0 left-20"
+    <span
+      class="opacity-0 lg:opacity-10 lg:group-hover:opacity-70 group-hover:opacity-0 fixed top-0 left-20"
       ><kbd class="kbd">Ctrl + ◀/▶</kbd> to change Page</span
     >
-    <span class="opacity-10 group-hover:opacity-70 fixed top-0 right-20"
+    <span
+      class="opacity-0 lg:opacity-10 lg:group-hover:opacity-70 group-hover:opacity-0 fixed top-0 right-20"
       ><kbd class="kbd">Shift + B</kbd> to toggle Menu</span
     >
     <router-link

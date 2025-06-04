@@ -1,9 +1,14 @@
 <template>
   <div class="grid p-10">
-    <nav class="card flex-row justify-between items-center">
+    <nav class="card flex lg:flex-row flex-wrap justify-between gap-5">
       <form class="flex gap-5" @submit.prevent="addUser">
-        <label class="input">
-          <input type="text" id="newUser" placeholder="User Id" />
+        <label class="input input-bordered flex items-center gap-2">
+          <input
+            type="text"
+            v-model="newUserInput"
+            placeholder="User Id"
+            class="grow"
+          />
           <button type="submit" class="label btn">Add</button>
         </label>
         <div class="input floating-label">
@@ -14,9 +19,13 @@
         </div>
       </form>
       <div class="flex gap-5">
-        <button class="btn btn-outline btn-md">Copy</button>
-        <button class="btn btn-outline btn-md" @click="clearData">
-          Clear Data
+        <button
+          class="btn btn-outline btn-md tooltip"
+          data-tip="Copy!"
+          @click="copyData"
+          onclick="this.data-tip=Copied!!"
+        >
+          Copy
         </button>
         <button
           class="btn btn-outline btn-md"
@@ -31,8 +40,8 @@
     <dialog id="column_modal" class="modal">
       <div class="modal-box h-[98vh] w-11/12 max-w-5xl">
         <h3 class="text-lg font-bold">Edit Columns</h3>
-        <table class="table table-md">
-          <thead class="text-lg bg-base-200">
+        <table class="table table-xs">
+          <thead class="bg-base-200">
             <tr>
               <th>Column Name</th>
               <th>Table Name</th>
@@ -48,7 +57,7 @@
               <td>
                 <Trash
                   @click="removeColumn(index)"
-                  class="btn btn-ghost btn-sm"
+                  class="btn btn-ghost btn-error btn-sm"
                 />
               </td>
             </tr>
@@ -58,96 +67,92 @@
           <label class="btn btn-info mr-10" @click="addColumn"
             >Add Column</label
           >
+          <label class="btn btn-error mr-10" @click="resetColumns"
+            >Reset Column</label
+          >
           <button class="btn btn-outline">Close</button>
         </form>
       </div>
     </dialog>
     <!--  -->
-
-    <div class="mt-5">
-      <table class="table text-xl table-zebra">
-        <thead class="text-xl bg-base-200">
-          <tr>
-            <th>User</th>
-            <th v-for="col in columns" :key="col.key">
-              {{ col.name }}
-            </th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(user, index) in users" :key="index">
-            <td>{{ user }}</td>
-            <td v-for="col in columns" :key="col.key">-</td>
-            <td class="flex gap-5">
-              <RefreshCw
-                class="btn btn-ghost btn-info btn-sm"
-                @click="refreshUser(user)"
-              />
-              <Trash
-                class="btn btn-ghost btn-error btn-sm"
-                @click="deleteUser(index)"
-              />
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+    <!-- Data Table -->
+    <data-table
+      @deleteUser="deleteUser"
+      @refreshUser="refreshUser"
+      :columns="columns"
+      :users="users"
+      :data="data"
+      :loadingUser="loadingUser"
+    />
   </div>
 </template>
 
 <script setup>
-import { computed, onMounted, ref } from "vue";
-import { Trash, RefreshCw } from "lucide-vue-next";
-import useLocalStorage from "@/composables/localStorage";
-onMounted(() => {});
+import { ref } from "vue";
+import { Trash } from "lucide-vue-next";
+import { format, subMonths, startOfMonth, endOfMonth } from "date-fns";
+import DataTable from "@/components/Data/DataTable.vue";
+import useUsers from "@/composables/userData";
 
-const initialColumns = ref([
-  { name: "Incident", tableName: "incident", key: 1 },
-  { name: "Changes", tableName: "change_request", key: 2 },
-  { name: "Change Task", tableName: "change_task", key: 3 },
-  { name: "Task", tableName: "sc_task", key: 4 },
-  { name: "Personal Task", tableName: "personal_task", key: 5 },
-  { name: "Jira", tableName: "issuetable", key: 6 },
-]);
+const newUserInput = ref("");
+const UsersInstance = new useUsers();
 
-const users = ref([]);
-const columns = computed(() => initialColumns.value);
-const startDate = ref("");
-const endDate = ref("");
+const users = UsersInstance.users;
+const columns = UsersInstance.columns;
 
-const saveUsers = new useLocalStorage("Users");
-const saveColumns = new useLocalStorage("Columns");
+const data = ref([]);
+const loadingUser = ref(null);
+
+const startDate = ref(
+  format(startOfMonth(subMonths(new Date(), 1)), "yyyy-MM-dd")
+);
+const endDate = ref(format(endOfMonth(subMonths(new Date(), 1)), "yyyy-MM-dd"));
 
 const addUser = () => {
-  if (newUser.value) {
-    users.value.push(newUser.value);
-    newUser.value = "";
-    saveUsers.save(users.value);
+  const trimmedUser = newUserInput.value.trim();
+  if (trimmedUser) {
+    UsersInstance.addUser(trimmedUser);
+    newUserInput.value = "";
+  } else {
+    console.warn("User ID cannot be empty.");
   }
 };
 
-const clearData = () => {
-  users.value = [];
-  saveUsers.save(users.value);
-};
-
-const refreshUser = (userId) => {
-  console.log(`Refreshing user data for: ${userId}`);
-};
-
 const deleteUser = (index) => {
-  users.value.splice(index, 1);
-  saveUsers.save(users.value);
+  UsersInstance.deleteUser(index);
 };
 
 const addColumn = () => {
-  columns.value.push({ name: "", tableName: "" });
-  saveColumns.save(columns.value);
+  UsersInstance.addColumn();
 };
 
 const removeColumn = (index) => {
-  columns.value.splice(index, 1);
-  saveColumns.save(columns.value);
+  UsersInstance.removeColumn(index);
+};
+
+const resetColumns = () => {
+  UsersInstance.resetColumnsToDefault();
+};
+
+const refreshUser = async (userId) => {
+  loadingUser.value = userId;
+  console.log(`Refreshing data for user: ${userId}`);
+  try {
+    const fetchedData = await UsersInstance.fetchData(
+      userId,
+      startDate.value,
+      endDate.value
+    );
+
+    data.value = {
+      ...data.value,
+      [userId]: fetchedData,
+    };
+  } catch (error) {
+    console.error("Error refreshing user data:", error);
+  } finally {
+    loadingUser.value = null;
+  }
+  console.log("Updated data state:", data.value);
 };
 </script>

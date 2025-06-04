@@ -12,7 +12,7 @@ defineProps({
 </script>
 
 <template>
-  <div class="tabs tabs-box h-full rounded-lg">
+  <div class="tabs tabs-box h-full rounded-lg overflow-y-scroll">
     <template v-for="tab in tabs">
       <input
         type="radio"

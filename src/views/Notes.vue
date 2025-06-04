@@ -1,7 +1,7 @@
 <script setup>
-import { onMounted, ref } from "vue";
+import { onMounted, ref, watch } from "vue";
 import { Trash } from "lucide-vue-next";
-
+import Editor from "@/components/SimpleEditor.vue";
 const debounce = (func, delay) => {
   let timeout;
   return (...args) => {
@@ -12,7 +12,7 @@ const debounce = (func, delay) => {
   };
 };
 
-const timeout = undefined;
+let timeout = undefined;
 const isRemove = ref(false);
 const selectedNote = ref();
 const Notes = ref([]);
@@ -59,6 +59,15 @@ onMounted(() => {
 });
 
 const debouncedSavedNotes = debounce(saveNotes, 1000);
+
+watch(
+  () => selectedNote.value?.content,
+  (newContent, oldContent) => {
+    if (selectedNote.value && newContent !== oldContent) {
+      debouncedSavedNotes();
+    }
+  }
+);
 </script>
 
 <template>
@@ -105,11 +114,15 @@ const debouncedSavedNotes = debounce(saveNotes, 1000);
     </aside>
     <section class="flex flex-1 flex-col p-3">
       <template v-if="selectedNote">
-        <textarea
+        <!-- <textarea
           class="border rounded w-full h-full bg-base-200"
           v-model="selectedNote.content"
           @input="debouncedSavedNotes"
-        ></textarea>
+        ></textarea> -->
+        <Editor
+          class="border rounded w-full h-full bg-base-200"
+          v-model="selectedNote.content"
+        />
       </template>
       <p v-else>Select a note</p>
     </section>
