@@ -5,21 +5,7 @@ import Blueprint from "@/components/dashboard/TheBlueprint.vue";
 import Orchestrate from "@/components/dashboard/TheBlueprint.vue";
 import SelectBlueprint from "@/components/dashboard/TheBlueprint.vue";
 import ErrorCard from "@/components/dashboard/ErrorCard.vue";
-
-const Stats = ref([
-  {
-    name: "Blueprint",
-    failed: 0,
-    in_progress: 0,
-    success: 0,
-  },
-  {
-    name: "Orchestrate",
-    failed: 0,
-    in_progress: 0,
-    success: 0,
-  },
-]);
+import StatusCard from "@/components/dashboard/StatusCard.vue";
 
 const blueprintTabsData = [
   {
@@ -52,7 +38,6 @@ const handleBlueprintSelected = (data) => {
 };
 
 const loadStatsData = (dataStat) => {
-  // dataStat is expected to be { name: "Blueprint" or "Orchestrate", stats: { FAILED: x, IN_PROGRESS: y, SUCCESS: z } }
   console.log("Received statData from child:", dataStat);
   const statEntry = Stats.value.find(
     (s) => s.name.toLowerCase() === dataStat.name.toLowerCase()
@@ -83,7 +68,6 @@ const loadStatsData = (dataStat) => {
             :refetch="true"
             placelabel="blueprint"
             @selectBlueprint="handleBlueprintSelected"
-            @statData="loadStatsData"
           ></Blueprint>
         </template>
         <template #orchestrate>
@@ -94,26 +78,7 @@ const loadStatsData = (dataStat) => {
         ></template>
       </Tabs>
     </div>
-    <div class="card col-span-1">
-      <h1 class="text-center text-xl font-bold">Status</h1>
-      <div class="grid grid-cols-2">
-        <div v-for="stat in Stats" :key="stat.name" class="grid text-center">
-          <h1 class="text-xl">{{ stat.name }}</h1>
-          <label class="text-red-400">
-            Failed
-            <span>{{ stat.failed }}</span>
-          </label>
-          <label class="text-orange-400">
-            In_Progress
-            <span>{{ stat.in_progress }}</span>
-          </label>
-          <label class="text-green-500">
-            Success
-            <span>{{ stat.success }}</span>
-          </label>
-        </div>
-      </div>
-    </div>
+    <status-card></status-card>
 
     <div class="card col-span-1">
       <h1 class="card-title">Rhel Version</h1>

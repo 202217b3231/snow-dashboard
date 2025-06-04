@@ -9,13 +9,17 @@ export const useBlueprintStore = defineStore("blueprintAllData", () => {
     "https://jenkins.eat.jnj.com/jetv-dev/job/CLOUDxBlueprintFactory/job/1_Orchestrate/wfapi/runs";
 
   async function fetchData(url) {
-    const response = await fetch(url);
-    if (!response.ok) {
-      throw new Error(
-        `Failed to fetch data from ${url}. Status: ${response.status}`
-      );
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(
+          `Failed to fetch data from ${url}. Status: ${response.status}`
+        );
+      }
+      return response.json();
+    } catch (error) {
+      console.log(error);
     }
-    return response.json();
   }
   const filterData = (blueprints, filterTerm) => {
     if (!Array.isArray(blueprints)) {
@@ -46,8 +50,8 @@ export const useBlueprintStore = defineStore("blueprintAllData", () => {
   };
   const allData = computed(async () => {
     return {
-      blueprint: await fetchData(blueprintApi),
-      orchestrate: await fetchData(orchestrateApi),
+      blueprint: (await fetchData(blueprintApi)) ?? [],
+      orchestrate: (await fetchData(orchestrateApi)) ?? [],
     };
   });
 

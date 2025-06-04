@@ -1,7 +1,7 @@
 <template>
-  <div class="text-lg">
+  <div class="text-lg relative">
     <label
-      class="input absolute -top-10 right-0 lg:w-[60%] w-[50%] flex items-center"
+      class="input absolute -top-13 right-0 lg:w-[60%] w-[50%] flex items-center z-10"
     >
       <span class="label">🔍&#65038;</span>
       <input
@@ -18,13 +18,8 @@
         🔃&#65038;
       </button>
     </label>
-    <slot></slot>
 
-    <div v-if="loading" class="text-center p-4">Loading data...</div>
-    <div v-else-if="fetchError" class="text-center p-4 text-error">
-      {{ fetchError }}
-    </div>
-    <table v-else-if="TheData.length > 0" class="table">
+    <table class="table">
       <thead>
         <tr>
           <th>Started</th>
@@ -32,47 +27,55 @@
           <th>Name</th>
         </tr>
       </thead>
-      <tbody>
+      <div v-if="loading" class="text-center p-4 col-span-full">
+        Loading data...
+      </div>
+      <div
+        v-else-if="fetchError"
+        class="text-center p-4 text-error col-span-full"
+      >
+        Error: {{ fetchError }}
+      </div>
+      <tbody v-else-if="TheData.length > 0">
         <tr
-          v-for="(data, index) in TheData"
-          :key="index"
+          v-for="(item, index) in TheData"
+          :key="item.id || index"
           class="cursor-pointer hover:bg-base-100 active:bg-base-300"
           :class="
-            data.status === 'FAILED'
+            item.status === 'FAILED'
               ? 'text-error '
-              : data.status === 'SUCCESS'
+              : item.status === 'SUCCESS'
               ? 'text-success'
               : ''
           "
-          @click="$emit('selectBlueprint', data)"
+          @click="$emit('selectBlueprint', item)"
         >
           <td>
-            {{ format(new Date(data.startTimeMillis), "dd MMMM hh:mm a") }}
+            {{ format(new Date(item.startTimeMillis), "dd MMMM hh:mm a") }}
           </td>
           <td>
-            {{ data.status }}
+            {{ item.status }}
           </td>
-          <td>{{ data.name }}</td>
+          <td>{{ item.name }}</td>
         </tr>
       </tbody>
+      <div v-else class="text-center p-4 col-span-full">No data available.</div>
     </table>
-    <div v-else class="text-center p-4">No data available.</div>
   </div>
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted, watch } from "vue";
 import { format } from "date-fns";
 import { useBlueprintStore } from "@/composables/blueprintStore";
 
 const emit = defineEmits(["selectBlueprint", "statData"]);
 const dataStore = useBlueprintStore();
-const data = await dataStore.allData();
-const blueprintData = computed(() => data?.blueprint);
-const orchestrateData = computed(() => data?.orchestrate);
+
+const fetchedApiData = ref(null);
 
 const filterSearchTerm = ref("");
-const loading = ref(false);
+const loading = ref(true);
 const fetchError = ref(null);
 
 const props = defineProps({
@@ -88,23 +91,65 @@ const props = defineProps({
 });
 
 const TheData = computed(() => {
-  let sourceData = [];
+  let sourceDataArray = [];
   if (props.placelabel === "blueprint") {
-    sourceData = blueprintData.value;
-  } else if (props.placelabel === "orchesetrate") {
-    sourceData = orchestrateData.value;
-  } else if (props.data) {
+    sourceDataArray = fetchedApiData.value?.blueprint || [];
+  } else if (props.placelabel === "orchestrate") {
+    sourceDataArray = fetchedApiData.value?.orchestrate || [];
+  } else if (props.data?.stages) {
     if (Array.isArray(props.data.stages)) {
-      sourceData = props.data.stages;
-    } else if (props.data.stages !== undefined) {
+      sourceDataArray = props.data.stages;
+    } else {
       console.warn(
         "TheBlueprint: props.data.stages was provided but is not an array.",
         props.data.stages
       );
+      sourceDataArray = [];
     }
-  } else {
-    sourceData = [];
   }
-  return filteredData(Array.isArray(sourceData) ? sourceData : []);
+  return filteredData(sourceDataArray);
+});
+
+const filteredData = (sourceArray) => {
+  if (!Array.isArray(sourceArray)) return [];
+  if (!filterSearchTerm.value) {
+    return sourceArray;
+  }
+  const searchTerm = filterSearchTerm.value.toLowerCase();
+  return sourceArray.filter(
+    (item) => item.name && item.name.toLowerCase().includes(searchTerm)
+  );
+};
+
+const fetchData = async () => {
+  loading.value = true;
+  fetchError.value = null;
+  try {
+    fetchedApiData.value = await dataStore.allData();
+  } catch (e) {
+    console.error("TheBlueprint: Failed to fetch data:", e);
+    fetchError.value =
+      e.message || "An unknown error occurred while fetching data.";
+  } finally {
+    loading.value = false;
+  }
+};
+
+const handlerefetch = async () => {
+  await fetchData();
+  console.log("Data after refetch:", fetchedApiData.value);
+  console.log("TheData computed value:", TheData.value);
+};
+
+onMounted(() => {
+  if (
+    props.placelabel === "blueprint" ||
+    props.placelabel === "orchestrate" ||
+    !props.data
+  ) {
+    fetchData();
+  } else {
+    loading.value = false;
+  }
 });
 </script>
