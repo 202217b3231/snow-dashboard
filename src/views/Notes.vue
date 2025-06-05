@@ -89,7 +89,7 @@ watch(
           <Trash size="20" />
         </button>
       </label>
-      <ul class="flex-1 pt-2 space-y-2 overflow-y-scroll">
+      <ul class="flex-1 pt-1 px-0 space-y-2 overflow-y-scroll">
         <li
           :key="note.id"
           v-for="(note, index) in Notes"
@@ -121,7 +121,7 @@ watch(
     <section class="flex flex-1 flex-col p-3">
       <template v-if="selectedNote">
         <Editor
-          class="border rounded w-full h-full bg-base-200"
+          class="border rounded w-full h-full bg-base-100"
           v-model="selectedNote.content"
         />
       </template>

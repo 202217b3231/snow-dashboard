@@ -7,6 +7,7 @@ import {
   NotebookTabs as NotesIcon,
   Settings as SettingsIcon,
   DatabaseZap as DataIcon,
+  Workflow as FlowIcon,
   Eye,
   SunDim,
   Moon,
@@ -32,6 +33,11 @@ const routes = [
     url: "/notes",
     name: "Notes",
     icon: NotesIcon,
+  },
+  {
+    url: "/workflow",
+    name: "Workflow",
+    icon: FlowIcon,
   },
   {
     url: "/settings",

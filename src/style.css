@@ -47,19 +47,15 @@
     }
 
     pre {
-        @apply bg-base-200 border border-base-300 overflow-x-auto rounded p-3 my-2;
+        @apply bg-base-200 border text-sm border-base-300 overflow-x-auto rounded p-1 my-0.5;
     }
 
-    pre code {
+    code {
         @apply bg-transparent p-0;
     }
 
-    mark {
-        @apply bg-warning rounded-md p-0.5;
-    }
-
     blockquote {
-        @apply border-l-5 border-primary bg-base-100 mx-3 pl-4;
+        @apply border-l-5 border-primary bg-base-200 mx-3 pl-4;
     }
 
 

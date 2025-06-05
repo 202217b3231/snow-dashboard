@@ -20,6 +20,11 @@ const routes = [
     component: () => import("@/views/Notes.vue"),
   },
   {
+    path: "/workflow",
+    name: "workflow",
+    component: () => import("@/views/Workflow.vue"),
+  },
+  {
     path: "/settings",
     name: "settings",
     component: () => import("@/views/Settings.vue"),

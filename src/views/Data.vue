@@ -100,7 +100,7 @@ const UsersInstance = new useUsers();
 const users = UsersInstance.users;
 const columns = UsersInstance.columns;
 
-const data = ref({}); // Initialize as an object
+const data = ref({});
 const loadingUser = ref(null);
 const copyButtonTooltipText = ref("Copy!");
 
@@ -174,12 +174,12 @@ const copyData = async () => {
   users.value.forEach((user) => {
     const rowCells = [user];
     columns.value.forEach((col) => {
-      let cellValue = "-"; // Default value
+      let cellValue = "-";
       if (data.value && data.value[user]) {
         if (data.value[user]._error) {
           cellValue = data.value[user].message || "Error";
         } else if (data.value[user].hasOwnProperty(col.tableName)) {
-          cellValue = String(data.value[user][col.tableName]); // Ensure it's a string
+          cellValue = String(data.value[user][col.tableName]);
         }
       }
       rowCells.push(cellValue);
@@ -195,7 +195,7 @@ const copyData = async () => {
     copyButtonTooltipText.value = "Failed to copy!";
   } finally {
     setTimeout(() => {
-      copyButtonTooltipText.value = "Copy!"; // Reset tooltip after 2 seconds
+      copyButtonTooltipText.value = "Copy!";
     }, 2000);
   }
 };
@@ -217,8 +217,8 @@ onMounted(() => {
       data.value = JSON.parse(storedData);
     } catch (e) {
       console.error("Failed to parse stored data from localStorage:", e);
-      localStorage.removeItem(LS_DATA_KEY); // Clear corrupted data
-      data.value = {}; // Reset to initial empty object
+      localStorage.removeItem(LS_DATA_KEY);
+      data.value = {};
     }
   }
 });
