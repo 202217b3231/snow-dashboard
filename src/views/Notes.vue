@@ -14,15 +14,8 @@ const debounce = (func, delay) => {
 
 let timeout = undefined;
 const isRemove = ref(false);
-const selectedNote = ref();
+const selectedNote = ref(null);
 const Notes = ref([]);
-
-function updateNoteContent(newContent) {
-  if (selectedNote) {
-    selectedNote.content = newContent;
-    debouncedSavedNotes();
-  }
-}
 
 const saveNotes = () => {
   localStorage.setItem("notes", JSON.stringify(Notes.value));
@@ -108,7 +101,13 @@ watch(
           @click="selectNote(note)"
         >
           <p class="badge badge-xs">{{ index + 1 }}</p>
-          <div class="truncate pl-5">{{ note.content.split("\n")[0] }}</div>
+          <p class="truncate pl-5 flex-1 text-left">
+            {{
+              (note.content || "")
+                ?.split("<div>")[0].replace(/<.*?>|<\/.*?>/g, "")
+                 || "Empty Note"
+            }}
+          </p>
           <p
             v-if="isRemove"
             class="p-1 bg-error text-error-content rounded-r-lg"
@@ -124,7 +123,6 @@ watch(
         <Editor
           class="border rounded w-full h-full bg-base-200"
           v-model="selectedNote.content"
-          @update-content="updateNoteContent"
         />
       </template>
       <p v-else>Select a note</p>

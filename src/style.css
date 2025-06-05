@@ -25,114 +25,41 @@
         @apply border border-base-300 bg-base-200 p-4 rounded-lg;
     }
 
-    .tiptap {
-        @apply min-h-[300px] leading-relaxed border border-base-300 shadow-lg outline-none p-4;
+    ul,
+    ol {
+        @apply pl-4 pr-4 mt-5 mb-5 ml-1.5;
 
-        .tiptap {
-            @apply min-h-[300px] leading-relaxed border border-base-300 shadow-lg outline-none p-4;
+        li p {
+            @apply mt-1 mb-1;
         }
-
-        ul,
-        ol {
-            @apply pl-4 pr-4 mt-5 mb-5 ml-1.5;
-
-            li p {
-                @apply mt-1 mb-1;
-            }
-        }
-
-        ul {
-            list-style-type: disc;
-        }
-
-        ol {
-            list-style-type: decimal;
-        }
-
-        h1,
-        h2,
-        h3,
-        h4,
-        h5,
-        h6 {
-            @apply leading-[1.1] mt-3 mb-1 text-pretty font-bold;
-        }
-
-        h1,
-        h2 {
-            @apply mt-5 mb-3;
-        }
-
-        h1 {
-            @apply text-[1.4rem];
-        }
-
-        h2 {
-            @apply text-[1.2rem];
-        }
-
-        h3 {
-            @apply text-[1.1rem];
-        }
-
-        h4 {
-            @apply text-[1rem];
-        }
-
-        code:not(pre code) {
-            @apply bg-base-200 text-base-content text-sm rounded-md p-1;
-        }
-
-        pre {
-            @apply bg-base-200 border border-base-300 overflow-x-auto rounded p-3 my-2;
-        }
-
-        pre code {
-            @apply bg-transparent p-0;
-        }
-
-        mark {
-            @apply bg-warning rounded-md p-0.5;
-        }
-
-        blockquote {
-            @apply border-l-5 border-primary bg-base-200 mx-3 pl-4;
-        }
-
-        hr {
-            @apply border-t-3 border-base-300 mx-8;
-        }
-
-
     }
 
-    .editor-container {
-        @apply bg-base-100 p-2;
+    ul {
+        list-style-type: disc;
     }
 
-    .toolbar {
-        @apply flex flex-wrap gap-2 mb-4 bg-base-100 rounded-md p-2 border-b border-base-200 items-center;
+    ol {
+        list-style-type: decimal;
     }
 
-    .toolbar-btn {
-        @apply btn btn-ghost rounded px-1.5;
+    code:not(pre code) {
+        @apply bg-base-200 text-base-content text-sm rounded-md p-1;
     }
 
-    .toolbar-btn.is-active,
-    .toolbar-btn:active {
-        @apply bg-accent text-accent-content;
+    pre {
+        @apply bg-base-200 border border-base-300 overflow-x-auto rounded p-3 my-2;
     }
 
-    .toolbar-btn:disabled {
-        @apply opacity-50 cursor-not-allowed;
+    pre code {
+        @apply bg-transparent p-0;
     }
 
-    .toolbar-select {
-        @apply border border-base-300 rounded-md p-1 mx-2;
+    mark {
+        @apply bg-warning rounded-md p-0.5;
     }
 
-    input[type="color"] {
-        @apply w-8 h-8 border border-base-300 rounded-md p-0.5 cursor-pointer;
+    blockquote {
+        @apply border-l-5 border-primary bg-base-100 mx-3 pl-4;
     }
 
 
