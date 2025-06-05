@@ -58,5 +58,20 @@
         @apply border-l-5 border-primary bg-base-200 mx-3 pl-4;
     }
 
+    table {
+        border-collapse: collapse;
+        width: 100%;
+    }
 
+    th,
+    td {
+        border: 1px solid #ddd;
+        padding: 10px;
+        text-align: left;
+    }
+
+    th {
+        background-color: #f0f0f0;
+        font-weight: 700;
+    }
 }

@@ -1,12 +1,12 @@
 <template>
   <div class="flex flex-col">
     <div
-      class="buttons flex flex-wrap items-center gap-1 p-2 border-b border-base-300 shrink-0"
+      class="buttons flex flex-wrap items-center gap-2 p-2 border-b border-base-300 shrink-0"
     >
       <button
         v-for="command in commands"
         :key="command.cmd"
-        class="btn btn-xs btn-success tooltip tooltip-bottom"
+        class="btn btn-xs btn-accent tooltip tooltip-bottom"
         :title="command.desc"
         :data-tip="command.cmd"
         @click="doCommand(command)"
@@ -17,8 +17,39 @@
           :is="command.iconComponent"
           :size="16"
         />
+        <span v-else-if="command.displayText">{{ command.displayText }}</span>
         <span v-else>{{ command.cmd }}</span>
       </button>
+      <select
+        class="btn btn-xs text-sm bg-accent focus:outline-0 border-0 w-fit"
+        title="Text Alignment"
+        @change="handleAlignmentChange"
+        v-model="selectedAlignment"
+      >
+        <option value="" disabled selected>Align</option>
+        <option
+          v-for="alignCmd in alignmentCommands"
+          :key="alignCmd.cmd"
+          :value="alignCmd.cmd"
+        >
+          {{ alignCmd.displayText || alignCmd.cmd.replace("justify", "") }}
+        </option>
+      </select>
+      <select
+        class="btn btn-xs text-sm bg-accent focus:outline-0 border-0 w-fit"
+        title="Text Size"
+        @change="handleSizeChange"
+        v-model="selectedSize"
+      >
+        <option value="" disabled selected>Size</option>
+        <option
+          v-for="sizeCmd in textSizeCommands"
+          :key="sizeCmd.cmd"
+          :value="sizeCmd.val"
+        >
+          {{ sizeCmd.val }}
+        </option>
+      </select>
     </div>
     <div
       ref="editorDiv"
@@ -30,12 +61,12 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted, defineProps, defineEmits } from "vue";
+import { ref, watch, onMounted, defineProps, defineEmits, computed } from "vue";
+
 import {
   Palette,
   Bold,
   Type,
-  Baseline,
   Pilcrow,
   Highlighter,
   Indent,
@@ -45,10 +76,6 @@ import {
   List,
   FileText,
   Italic,
-  AlignCenter,
-  AlignJustify,
-  AlignLeft,
-  AlignRight,
   Outdent,
   Redo2,
   RemoveFormatting,
@@ -70,6 +97,8 @@ const props = defineProps({
 const emit = defineEmits(["update:modelValue"]);
 
 const editorDiv = ref(null);
+const selectedAlignment = ref("");
+const selectedSize = ref("");
 
 watch(
   () => props.modelValue,
@@ -87,154 +116,186 @@ onMounted(() => {
   }
 });
 
-const commands = [
+const allCommandsDefinition = [
   {
     cmd: "bold",
     iconComponent: Bold,
-    desc: "Toggles bold on/off for the selection or at the insertion point. (Internet Explorer uses the STRONG tag instead of B.)",
   },
   {
     cmd: "italic",
     iconComponent: Italic,
-    desc: "Toggles italics on/off for the selection or at the insertion point. (Internet Explorer uses the EM tag instead of I.)",
   },
   {
     cmd: "underline",
     iconComponent: Underline,
-    desc: "Toggles underline on/off for the selection or at the insertion point.",
   },
   {
     cmd: "strikeThrough",
     iconComponent: Strikethrough,
-    desc: "Toggles strikethrough on/off for the selection or at the insertion point.",
   },
   {
     cmd: "fontName",
     val: "'Inconsolata', monospace",
     iconComponent: Type,
-    desc: 'Changes the font name for the selection or at the insertion point. This requires a font name string ("Arial" for example) to be passed in as a value argument.',
   },
   {
     cmd: "fontSize",
-    val: "1-7",
-    iconComponent: Baseline,
-    desc: "Changes the font size for the selection or at the insertion point. This requires an HTML font size (1-7) to be passed in as a value argument.",
+    val: "1",
+    skipPrompt: true,
+  },
+  {
+    cmd: "fontSize",
+    val: "2",
+    skipPrompt: true,
+  },
+  {
+    cmd: "fontSize",
+    val: "3",
+    skipPrompt: true,
+  },
+  {
+    cmd: "fontSize",
+    val: "4",
+    skipPrompt: true,
+  },
+  {
+    cmd: "fontSize",
+    val: "5",
+    skipPrompt: true,
+  },
+  {
+    cmd: "fontSize",
+    val: "6",
+    skipPrompt: true,
+  },
+  {
+    cmd: "fontSize",
+    val: "7",
+    skipPrompt: true,
   },
   {
     cmd: "foreColor",
     val: "blue",
     iconComponent: Palette,
-    desc: "Changes a font color for the selection or at the insertion point. This requires a color value string to be passed in as a value argument.",
   },
   {
     cmd: "backColor",
     val: "lime",
     iconComponent: Palette,
-    desc: "Changes the document background color. In styleWithCss mode, it affects the background color of the containing block instead. This requires a color value string to be passed in as a value argument. (Internet Explorer uses this to set text background color.)",
   },
   {
     cmd: "hiliteColor",
     val: "Orange",
     iconComponent: Highlighter,
-    desc: "Changes the background color for the selection or at the insertion point. Requires a color value string to be passed in as a value argument. UseCSS must be turned on for this to function. (Not supported by Internet Explorer.)",
   },
   {
     cmd: "formatBlock",
     val: "<pre>",
     iconComponent: Code2,
-    desc: 'Adds an HTML block-style tag around the line containing the current selection, replacing the block element containing the line if one exists (in Firefox, BLOCKQUOTE is the exception - it will wrap any containing block element). Requires a tag-name string to be passed in as a value argument. Virtually all block style tags can be used (eg. "H1", "P", "DL", "BLOCKQUOTE"). (Internet Explorer supports only heading tags H1 - H6, ADDRESS, and PRE, which must also include the tag delimiters &lt; &gt;, such as "&lt;H1&gt;".)',
+
     skipPrompt: true,
   },
   {
     cmd: "formatBlock",
     val: "<blockquote>",
     iconComponent: Pilcrow,
-    desc: 'Adds an HTML block-style tag around the line containing the current selection, replacing the block element containing the line if one exists (in Firefox, BLOCKQUOTE is the exception - it will wrap any containing block element). Requires a tag-name string to be passed in as a value argument. Virtually all block style tags can be used (eg. "H1", "P", "DL", "BLOCKQUOTE"). (Internet Explorer supports only heading tags H1 - H6, ADDRESS, and PRE, which must also include the tag delimiters &lt; &gt;, such as "&lt;H1&gt;".)',
+
     skipPrompt: true,
   },
   {
     cmd: "insertHorizontalRule",
     iconComponent: Minus,
-    desc: "Inserts a horizontal rule at the insertion point (deletes selection).",
   },
   {
     cmd: "insertImage",
     val: "http://dummyimage.com/160x90",
     iconComponent: Image,
-    desc: "Inserts an image at the insertion point (deletes selection). Requires the image SRC URI string to be passed in as a value argument. The URI must contain at least a single character, which may be a white space. (Internet Explorer will create a link with a null URI value.)",
   },
   {
     cmd: "insertOrderedList",
     iconComponent: ListOrdered,
-    desc: "Creates a numbered ordered list for the selection or at the insertion point.",
   },
   {
     cmd: "insertUnorderedList",
     iconComponent: List,
-    desc: "Creates a bulleted unordered list for the selection or at the insertion point.",
   },
   {
     cmd: "insertText",
     val: new Date(),
     iconComponent: FileText,
-    desc: "Inserts the given plain text at the insertion point (deletes selection).",
   },
   {
     cmd: "justifyCenter",
-    iconComponent: AlignCenter,
-    desc: "Centers the selection or insertion point.",
+    displayText: "Center",
   },
   {
     cmd: "justifyFull",
-    iconComponent: AlignJustify,
-    desc: "Justifies the selection or insertion point.",
+    displayText: "Justify",
   },
   {
     cmd: "justifyLeft",
-    iconComponent: AlignLeft,
-    desc: "Justifies the selection or insertion point to the left.",
+    displayText: "Left",
   },
   {
     cmd: "justifyRight",
-    iconComponent: AlignRight,
-    desc: "Right-justifies the selection or the insertion point.",
+    displayText: "Right",
   },
   {
     cmd: "outdent",
     iconComponent: Outdent,
-    desc: "Outdents the line containing the selection or insertion point.",
   },
   {
     cmd: "indent",
     iconComponent: Indent,
-    desc: "Indents the line containing the selection or insertion point. In Firefox, if the selection spans multiple lines at different levels of indentation, only the least indented lines in the selection will be indented.",
   },
   {
     cmd: "redo",
     iconComponent: Redo2,
-    desc: "Redoes the previous undo command.",
   },
   {
     cmd: "undo",
     iconComponent: Undo2,
-    desc: "Undoes the last executed command.",
   },
   {
     cmd: "removeFormat",
     iconComponent: RemoveFormatting,
-    desc: "Removes all formatting from the current selection.",
   },
   {
     cmd: "subscript",
     iconComponent: Subscript,
-    desc: "Toggles subscript on/off for the selection or at the insertion point.",
   },
   {
     cmd: "superscript",
     iconComponent: Superscript,
-    desc: "Toggles superscript on/off for the selection or at the insertion point.",
   },
 ];
+
+const commands = computed(() => {
+  const alignmentCmds = [
+    "justifyCenter",
+    "justifyFull",
+    "justifyLeft",
+    "justifyRight",
+    "fontSize",
+  ];
+  return allCommandsDefinition.filter(
+    (cmd) => !alignmentCmds.includes(cmd.cmd)
+  );
+});
+
+const alignmentCommands = computed(() => {
+  const alignmentCmds = [
+    "justifyLeft",
+    "justifyCenter",
+    "justifyRight",
+    "justifyFull",
+  ];
+  return allCommandsDefinition.filter((cmd) => alignmentCmds.includes(cmd.cmd));
+});
+
+const textSizeCommands = computed(() => {
+  return allCommandsDefinition.filter((cmd) => cmd.cmd == "fontSize");
+});
 
 const doCommand = (command) => {
   let valueArgument = command.val;
@@ -260,6 +321,30 @@ const doCommand = (command) => {
   if (editorDiv.value) {
     editorDiv.value.focus();
     emit("update:modelValue", editorDiv.value.innerHTML);
+  }
+};
+const handleAlignmentChange = (event) => {
+  const selectedCmd = event.target.value;
+  if (selectedCmd) {
+    const commandToExecute = allCommandsDefinition.find(
+      (cmd) => cmd.cmd === selectedCmd
+    );
+    if (commandToExecute) {
+      doCommand(commandToExecute);
+    }
+    selectedAlignment.value = "";
+  }
+};
+const handleSizeChange = (event) => {
+  const selectedValue = event.target.value;
+  if (selectedValue) {
+    const commandToExecute = allCommandsDefinition.find(
+      (cmd) => cmd.cmd === "fontSize" && cmd.val === selectedValue
+    );
+    if (commandToExecute) {
+      doCommand(commandToExecute);
+    }
+    selectedSize.value = "";
   }
 };
 </script>

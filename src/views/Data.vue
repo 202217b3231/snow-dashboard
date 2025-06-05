@@ -104,7 +104,6 @@ const data = ref({});
 const loadingUser = ref(null);
 const copyButtonTooltipText = ref("Copy!");
 
-// Local storage keys
 const LS_START_DATE_KEY = "dashboard_app_startDate";
 const LS_END_DATE_KEY = "dashboard_app_endDate";
 const LS_DATA_KEY = "dashboard_app_data";
@@ -164,31 +163,38 @@ const refreshUser = async (userId) => {
 };
 
 const copyData = async () => {
-  let tableString = "";
+  let htmlTable = "<table>";
+  htmlTable += "<thead><tr><th>User</th>";
+  columns.value.forEach((col) => {
+    htmlTable += `<th>${col.name}</th>`;
+  });
+  htmlTable += "</tr></thead>";
+  htmlTable += "<tbody>";
 
-  // Header row
-  const headerCells = ["User", ...columns.value.map((col) => col.name)];
-  tableString += headerCells.join("\t") + "\n";
-
-  // Data rows
   users.value.forEach((user) => {
-    const rowCells = [user];
+    htmlTable += "<tr>";
+    htmlTable += `<td>${user}</td>`;
     columns.value.forEach((col) => {
       let cellValue = "-";
       if (data.value && data.value[user]) {
         if (data.value[user]._error) {
           cellValue = data.value[user].message || "Error";
         } else if (data.value[user].hasOwnProperty(col.tableName)) {
-          cellValue = String(data.value[user][col.tableName]);
+          cellValue = String(data.value[user][col.tableName] ?? "-");
         }
       }
-      rowCells.push(cellValue);
+      htmlTable += `<td>${cellValue}</td>`;
     });
-    tableString += rowCells.join("\t") + "\n";
+    htmlTable += "</tr>";
   });
+  htmlTable += "</tbody></table>";
 
   try {
-    await navigator.clipboard.writeText(tableString);
+    const blob = new Blob([htmlTable], { type: "text/html" });
+    const item = new ClipboardItem({
+      "text/html": blob,
+    });
+    await navigator.clipboard.write([item]);
     copyButtonTooltipText.value = "Copied!!";
   } catch (err) {
     console.error("Failed to copy table data: ", err);

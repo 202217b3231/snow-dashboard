@@ -2,7 +2,7 @@
 import { onMounted, ref, watch } from "vue";
 import { Trash } from "lucide-vue-next";
 import Editor from "@/components/Editor.vue";
-import initialDefaultNoteContent from "@/components/DefaultNote.vue";
+import initialDefaultNoteContent from "@/assets/default-note.html?raw";
 
 const debounce = (func, delay) => {
   let timeout;
@@ -50,9 +50,6 @@ const toggleRemove = () => {
 };
 
 const removeNote = (note) => {
-  if (note.id === DEFAULT_NOTE_ID) {
-    return;
-  }
   Notes.value = Notes.value.filter((n) => n.id != note.id);
   if (selectedNote.value && selectedNote.value.id === note.id) {
     selectedNote.value =
@@ -121,7 +118,7 @@ watch(
 
 <template>
   <main class="flex w-full h-full p-3">
-    <aside class="flex flex-col gap-2 max-h-145 w-64">
+    <aside class="flex flex-col gap-2 max-h-145 w-52">
       <label class="input rounded mt-5">
         <button class="label btn text-xl rounded text-info" @click="addNote">
           ➕&#65038;
@@ -142,7 +139,7 @@ watch(
         <li
           :key="note.id"
           v-for="(note, index) in Notes"
-          class="bg-base-300 flex justify-between text-center h-8 rounded-lg relative cursor-pointer"
+          class="bg-base-300 flex justify-between h-8 rounded-lg cursor-pointer"
           :class="{
             'bg-info text-info-content':
               selectedNote && selectedNote.id === note.id,
@@ -152,12 +149,13 @@ watch(
           <p class="badge badge-xs">{{ index + 1 }}</p>
           <p
             v-if="note.id != DEFAULT_NOTE_ID"
-            class="truncate pl-5 flex-1 text-left"
+            class="truncate m-auto"
           >
             {{ (note.content || "").split("<div>")[0].replace(/<.*?>|<\/.*?>/g, "") || "Empty Note" }}
           </p>
+          <p v-else class="m-auto">Tracking Sheet</p>
           <p
-            v-if="isRemove && note.id !== DEFAULT_NOTE_ID"
+            v-if="isRemove"
             class="p-1 bg-error text-error-content rounded-r-lg"
             @click.stop="removeNote(note)"
           >
