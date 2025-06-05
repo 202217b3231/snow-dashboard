@@ -1,6 +1,7 @@
 <script setup>
 import { defineEmits } from "vue";
 import { Trash, RefreshCw } from "lucide-vue-next";
+
 const emit = defineEmits(["deleteUser", "refreshUser"]);
 
 const props = defineProps({

@@ -2,6 +2,8 @@
 import { onMounted, ref, watch } from "vue";
 import { Trash } from "lucide-vue-next";
 import Editor from "@/components/Editor.vue";
+import initialDefaultNoteContent from "@/components/DefaultNote.vue";
+
 const debounce = (func, delay) => {
   let timeout;
   return (...args) => {
@@ -12,6 +14,12 @@ const debounce = (func, delay) => {
   };
 };
 
+const DEFAULT_NOTE_ID = "system-default-note-001";
+const defaultNoteObject = {
+  id: DEFAULT_NOTE_ID,
+  content: initialDefaultNoteContent,
+};
+
 let timeout = undefined;
 const isRemove = ref(false);
 const selectedNote = ref(null);
@@ -19,7 +27,6 @@ const Notes = ref([]);
 
 const saveNotes = () => {
   localStorage.setItem("notes", JSON.stringify(Notes.value));
-  console.log("Saved!!");
 };
 
 const addNote = () => {
@@ -43,18 +50,60 @@ const toggleRemove = () => {
 };
 
 const removeNote = (note) => {
+  if (note.id === DEFAULT_NOTE_ID) {
+    return;
+  }
   Notes.value = Notes.value.filter((n) => n.id != note.id);
+  if (selectedNote.value && selectedNote.value.id === note.id) {
+    selectedNote.value =
+      Notes.value.find((n) => n.id === DEFAULT_NOTE_ID) ||
+      (Notes.value.length > 0 ? Notes.value[0] : null);
+  }
   saveNotes();
 };
 
 const selectNote = (note) => {
   selectedNote.value = note;
 };
-
 onMounted(() => {
-  const savedNotes = localStorage.getItem("notes");
-  if (savedNotes) {
-    Notes.value = JSON.parse(savedNotes);
+  const savedNotesRaw = localStorage.getItem("notes");
+  let notesFromStorage = [];
+  if (savedNotesRaw) {
+    try {
+      notesFromStorage = JSON.parse(savedNotesRaw);
+      if (!Array.isArray(notesFromStorage)) {
+        notesFromStorage = [];
+      }
+    } catch (e) {
+      console.error("Error parsing notes from localStorage:", e);
+      notesFromStorage = [];
+    }
+  }
+
+  let finalNotes = [...notesFromStorage];
+  const defaultNoteIndex = finalNotes.findIndex(
+    (note) => note.id === DEFAULT_NOTE_ID
+  );
+
+  if (defaultNoteIndex === -1) {
+    finalNotes.unshift({ ...defaultNoteObject });
+    Notes.value = finalNotes;
+    saveNotes();
+  } else {
+    const existingDefaultNote = finalNotes.splice(defaultNoteIndex, 1)[0];
+    finalNotes.unshift({
+      ...defaultNoteObject,
+      ...existingDefaultNote,
+      id: DEFAULT_NOTE_ID,
+    });
+    Notes.value = finalNotes;
+    if (defaultNoteIndex !== 0) {
+      saveNotes();
+    }
+  }
+  if (!selectedNote.value && Notes.value.length > 0) {
+    selectedNote.value =
+      Notes.value.find((n) => n.id === DEFAULT_NOTE_ID) || Notes.value[0];
   }
 });
 
@@ -101,17 +150,16 @@ watch(
           @click="selectNote(note)"
         >
           <p class="badge badge-xs">{{ index + 1 }}</p>
-          <p class="truncate pl-5 flex-1 text-left">
-            {{
-              (note.content || "")
-                ?.split("<div>")[0].replace(/<.*?>|<\/.*?>/g, "")
-                 || "Empty Note"
-            }}
+          <p
+            v-if="note.id != DEFAULT_NOTE_ID"
+            class="truncate pl-5 flex-1 text-left"
+          >
+            {{ (note.content || "").split("<div>")[0].replace(/<.*?>|<\/.*?>/g, "") || "Empty Note" }}
           </p>
           <p
-            v-if="isRemove"
+            v-if="isRemove && note.id !== DEFAULT_NOTE_ID"
             class="p-1 bg-error text-error-content rounded-r-lg"
-            @click="removeNote(note)"
+            @click.stop="removeNote(note)"
           >
             <Trash size="20" />
           </p>

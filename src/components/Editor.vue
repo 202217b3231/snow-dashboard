@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col">
     <div
-      class="buttons flex flex-wrap items-center gap-1 p-2 border-b border-gray-200 shrink-0"
+      class="buttons flex flex-wrap items-center gap-1 p-2 border-b border-base-300 shrink-0"
     >
       <button
         v-for="command in commands"
@@ -22,7 +22,7 @@
     </div>
     <div
       ref="editorDiv"
-      class="h-full p-3 flex-1 outline-none"
+      class="h-full p-3 flex-1 text-lg outline-none"
       contentEditable="true"
       @input="emit('update:modelValue', editorDiv ? editorDiv.innerHTML : '')"
     ></div>
