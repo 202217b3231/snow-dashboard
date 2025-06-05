@@ -19,8 +19,8 @@ export default class useUsers {
       { name: "Changes", tableName: "change_request" },
       { name: "Change Task", tableName: "change_task" },
       { name: "Task", tableName: "sc_task" },
-      { name: "Personal Task", tableName: "personal_task" },
       { name: "Jira", tableName: "issuetable" },
+      { name: "Personal Task", tableName: "personal_task" },
     ]);
 
     const loadedColumns = this.saveColumns.load();
@@ -65,8 +65,9 @@ export default class useUsers {
         newData[columnKey] = element ? element.rows.length : 0;
         newData[columnKey + "Url"] = templateUrls[idx];
       } catch (error) {
-        console.error(
-          `Error fetching data for column ${columnKey} from ${templateUrls[idx]}:`,
+        console.log(
+          `%cError fetching data for column ${columnKey} from ${templateUrls[idx]}:`,
+          "background:#FFFF55;color:black;",
           error
         );
         newData[columnKey] = "error";
@@ -83,7 +84,11 @@ export default class useUsers {
       }
       console.log("Fetched data:", newData);
     } catch (error) {
-      console.error("Critical error during data fetching process:", error);
+      console.log(
+        "Critical error during data fetching process:",
+        "background:#FFFF55;color:black;",
+        error
+      );
       this.error.value =
         error.message || "Failed to fetch data due to a critical error.";
     }
@@ -102,7 +107,7 @@ export default class useUsers {
       this.users.value.splice(index, 1);
       this.saveUsers.save(this.users.value);
     } else {
-      console.warn(`Invalid index ${index} for deleting user.`);
+      console.log(`Invalid index ${index} for deleting user.`);
     }
   }
 
@@ -116,7 +121,7 @@ export default class useUsers {
       this.columns.value.splice(index, 1);
       this.saveColumns.save(this.columns.value);
     } else {
-      console.warn(`Invalid index ${index} for deleting column.`);
+      console.log(`Invalid index ${index} for deleting column.`);
     }
   }
 

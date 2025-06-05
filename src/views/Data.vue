@@ -23,23 +23,19 @@
           class="btn btn-outline btn-md tooltip"
           :data-tip="copyButtonTooltipText"
           @click="copyData"
-          onclick="this.data-tip=Copied!!"
         >
           Copy
         </button>
-        <button
-          class="btn btn-outline btn-md"
-          onclick="column_modal.showModal()"
-        >
+        <button class="btn btn-outline btn-md" @click="openColumnModal">
           Edit Columns
         </button>
       </div>
     </nav>
 
     <!-- dialog -->
-    <dialog id="column_modal" class="modal">
+    <dialog ref="column_modal" class="modal">
       <div class="modal-box h-[98vh] w-11/12 max-w-5xl">
-        <h3 class="text-lg font-bold">Edit Columns</h3>
+        <h3 class="font-bold">Edit Columns</h3>
         <table class="table table-xs">
           <thead class="bg-base-200">
             <tr>
@@ -108,6 +104,7 @@ const LS_START_DATE_KEY = "dashboard_app_startDate";
 const LS_END_DATE_KEY = "dashboard_app_endDate";
 const LS_DATA_KEY = "dashboard_app_data";
 
+const column_modal = ref(null); // Declare the ref for the dialog
 const startDate = ref(
   format(startOfMonth(subMonths(new Date(), 1)), "yyyy-MM-dd")
 );
@@ -119,7 +116,13 @@ const addUser = () => {
     UsersInstance.addUser(trimmedUser);
     newUserInput.value = "";
   } else {
-    console.warn("User ID cannot be empty.");
+    console.log("User ID cannot be empty.");
+  }
+};
+
+const openColumnModal = () => {
+  if (column_modal.value) {
+    column_modal.value.showModal();
   }
 };
 
@@ -155,7 +158,11 @@ const refreshUser = async (userId) => {
     };
     localStorage.setItem(LS_DATA_KEY, JSON.stringify(data.value));
   } catch (error) {
-    console.error("Error refreshing user data:", error);
+    console.log(
+      "%cError refreshing user data:",
+      "background:#FFFF55;color:black;",
+      error
+    );
   } finally {
     loadingUser.value = null;
   }
@@ -197,7 +204,11 @@ const copyData = async () => {
     await navigator.clipboard.write([item]);
     copyButtonTooltipText.value = "Copied!!";
   } catch (err) {
-    console.error("Failed to copy table data: ", err);
+    console.log(
+      "%cFailed to copy table data: ",
+      "background:#FFFF55;color:black;",
+      err
+    );
     copyButtonTooltipText.value = "Failed to copy!";
   } finally {
     setTimeout(() => {
@@ -222,7 +233,11 @@ onMounted(() => {
     try {
       data.value = JSON.parse(storedData);
     } catch (e) {
-      console.error("Failed to parse stored data from localStorage:", e);
+      console.log(
+        "%cFailed to parse stored data from localStorage:",
+        "background:#FFFF55;color:black;",
+        e
+      );
       localStorage.removeItem(LS_DATA_KEY);
       data.value = {};
     }

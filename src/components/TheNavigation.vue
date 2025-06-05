@@ -148,7 +148,7 @@ onUnmounted(() => {
         :is="route.icon"
         class="w-5 h-5 m-2 z-8 opacity-20 group-hover:opacity-100"
       />
-      <p v-if="isActive" class="font-medium text-lg">
+      <p v-if="isActive" class="font-medium text-xl">
         {{ route.name }}
       </p>
     </router-link>

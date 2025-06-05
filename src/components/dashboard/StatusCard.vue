@@ -1,9 +1,9 @@
 <template>
-  <div class="card col-span-1">
-    <h1 class="text-center text-xl font-bold">Status</h1>
+  <div class="card col-span-1 text-xl">
+    <h1 class="text-center font-bold">Status</h1>
     <div class="grid grid-cols-2">
       <div v-for="stat in Stats" :key="stat.name" class="grid text-center">
-        <h1 class="text-xl">{{ stat.name }}</h1>
+        <h1 class="lg:text-xl text-lg">{{ stat.name }}</h1>
         <label class="grid text-red-500">
           Failed
           <span class="text-4xl">{{ stat.failed }}</span>
@@ -76,7 +76,7 @@ const updateStat = (name, statData) => {
     statEntry.in_progress = statData.IN_PROGRESS || 0;
     statEntry.success = statData.SUCCESS || 0;
   } else {
-    console.warn(
+    console.log(
       "StatusCard: Could not find stat type or missing stats in data:",
       name,
       statData
@@ -91,7 +91,11 @@ onMounted(async () => {
     console.log(result);
     updateStats(fetchedDataContainer);
   } catch (e) {
-    console.error("StatusCard: Failed to fetch data in onMounted:", e);
+    console.log(
+      "%cStatusCard: Failed to fetch data in onMounted:",
+      "background:#FFFF55;color:black;",
+      e
+    );
   }
 });
 </script>

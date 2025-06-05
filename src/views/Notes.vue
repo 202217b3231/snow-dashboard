@@ -72,7 +72,7 @@ onMounted(() => {
         notesFromStorage = [];
       }
     } catch (e) {
-      console.error("Error parsing notes from localStorage:", e);
+      console.log("Error parsing notes from localStorage:", "background:#FFFF55;color:black;",e);
       notesFromStorage = [];
     }
   }

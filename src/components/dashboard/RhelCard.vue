@@ -9,11 +9,7 @@
     <span v-if="loading" class="loading loading-bars loading-sm ml-2"></span>
     <span v-else-if="fetchError" class="text-error ml-2">{{ fetchError }}</span>
     <div v-else-if="versions.length > 0" class="mt-2">
-      <p
-        v-for="(ver, index) in versions"
-        :key="index"
-        class="lg:text-2xl text-lg"
-      >
+      <p v-for="(ver, index) in versions" :key="index" class="lg:text-2xl">
         {{ ver }}
       </p>
     </div>
@@ -44,7 +40,7 @@ watchEffect(async () => {
     !fetchedData.value.blueprint ||
     !Array.isArray(fetchedData.value.blueprint)
   ) {
-    console.warn("Invalid blueprint data.");
+    console.log("Invalid blueprint data.");
     processedVersions.value = [];
     return;
   }
@@ -91,7 +87,10 @@ watchEffect(async () => {
           }
         } catch (e) {
           fetchError.value = fetchError.value || e.message;
-          console.error(`Error processing version for ${term}: ${e.message}`);
+          console.log(
+            `%cError processing version for ${term}: ${e.message}`,
+            "background:#FFFF55;color:black;"
+          );
         }
       }
     } else {
@@ -113,7 +112,7 @@ const fetchVersions = async () => {
     fetchedData.value = await dataStore.allData;
   } catch (e) {
     fetchError.value = "Failed to load";
-    console.error("Failed to fetch data:", e);
+    console.log("Failed to fetch data:", "background:#FFFF55;color:black;", e);
   } finally {
     loading.value = !fetchError.value;
   }

@@ -20,13 +20,13 @@
         <pre
           v-for="(e, index) in Errors"
           :key="index"
-          class="mt-2 p-2 text-xs whitespace-pre-wrap"
+          class="mt-2 p-2 whitespace-pre-wrap"
         >
             {{ e }}
           </pre
         >
       </div>
-      <pre v-else class="mt-2 p-2 text-xs">Check logs for more.</pre>
+      <pre v-else class="mt-2 p-2">Check logs for more.</pre>
     </div>
     <p
       class="text-success"
@@ -113,8 +113,9 @@ const fetchError = async (url) => {
       Errors.value = [
         `Error: Failed to fetch logs from Jenkins. Status: ${res.status}`,
       ];
-      console.error(
-        `Failed to fetch error details from ${url}. Status: ${res.status}`
+      console.log(
+        `%cFailed to fetch error details from ${url}. Status: ${res.status}`,
+        "background:#FFFF55;color:black;"
       );
       return;
     }
@@ -133,7 +134,11 @@ const fetchError = async (url) => {
       ]; // Optional: message if no "error:" lines
     }
   } catch (error) {
-    console.error("Error fetching Jenkins console text:", error);
+    console.log(
+      "%cError fetching Jenkins console text:",
+      "background:#FFFF55;color:black;",
+      error
+    );
     Errors.value = [
       `An error occurred while fetching details: ${error.message}`,
     ];

@@ -1,5 +1,5 @@
 <template>
-  <div class="text-lg relative">
+  <div class="relative">
     <label
       class="input absolute -top-13 right-0 lg:w-[60%] w-[50%] flex items-center z-10"
     >
@@ -41,7 +41,7 @@
         <tr
           v-for="(item, index) in TheData"
           :key="index"
-          class="cursor-pointer hover:bg-base-100 active:bg-base-300"
+          class="cursor-pointer text-sm hover:bg-base-100 active:bg-base-300"
           :class="
             item.status === 'FAILED'
               ? 'text-red-500 '
@@ -60,7 +60,9 @@
           <td>{{ item.name }}</td>
         </tr>
       </tbody>
-      <div v-else class="text-center p-4 col-span-full">No data available.</div>
+      <div v-else class="text-center p-4 col-span-full text-lg">
+        No data available.
+      </div>
     </table>
   </div>
 </template>
@@ -118,7 +120,11 @@ const fetchData = async () => {
     fetchedApiData.value = await dataStore.allData;
     console.log("Fetch data.");
   } catch (e) {
-    console.error("TheBlueprint: Failed to fetch data:", e);
+    console.log(
+      "%cTheBlueprint: Failed to fetch data:",
+      "background:#FFFF55;color:black;",
+      e
+    );
     fetchError.value =
       e.message || "An unknown error occurred while fetching data.";
   } finally {
@@ -132,7 +138,11 @@ async function handleRefresh() {
     fetchedApiData.value = await dataStore.allData;
     console.log(fetchedApiData.value);
   } catch (error) {
-    console.error("Error fetching data", error);
+    console.log(
+      "%cError fetching data",
+      "background:#FFFF55;color:black;",
+      error
+    );
   } finally {
     if (fetchedApiData.value) {
       loading.value = false;

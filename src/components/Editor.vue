@@ -53,7 +53,7 @@
     </div>
     <div
       ref="editorDiv"
-      class="h-full p-3 flex-1 text-lg outline-none"
+      class="h-full p-3 flex-1 outline-none"
       contentEditable="true"
       @input="emit('update:modelValue', editorDiv ? editorDiv.innerHTML : '')"
     ></div>
@@ -310,7 +310,7 @@ const doCommand = (command) => {
       }
       valueArgument = promptedValue;
     } else {
-      console.warn(
+      console.log(
         `Prompt not available in this environment for command: ${cmd.cmd}`
       );
       return;

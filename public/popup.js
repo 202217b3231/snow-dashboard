@@ -4,7 +4,7 @@ function sendMessage(action) {
       if (response?.success) {
         console.log(response.message);
       } else {
-        console.error(response?.message || "Failed to trigger alert.");
+        console.log(response?.message || "Failed to trigger alert.");
       }
     });
   });
