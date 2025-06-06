@@ -4,6 +4,13 @@
       class="buttons flex flex-wrap items-center gap-2 p-2 border-b border-base-300 shrink-0"
     >
       <button
+        @click="copySelectedNoteContent"
+        class="btn btn-xs btn-outline btn-primary tooltip"
+        :data-tip="copyHtmlTooltip"
+      >
+        Copy HTML
+      </button>
+      <button
         v-for="command in commands"
         :key="command.cmd"
         class="btn btn-xs btn-accent tooltip tooltip-bottom"
@@ -53,7 +60,7 @@
     </div>
     <div
       ref="editorDiv"
-      class="h-full p-3 flex-1 outline-none"
+      class="h-full p-3 flex-1 outline-none w-270"
       contentEditable="true"
       @input="emit('update:modelValue', editorDiv ? editorDiv.innerHTML : '')"
     ></div>
@@ -99,7 +106,7 @@ const emit = defineEmits(["update:modelValue"]);
 const editorDiv = ref(null);
 const selectedAlignment = ref("");
 const selectedSize = ref("");
-
+const copyHtmlTooltip = ref("Copy");
 watch(
   () => props.modelValue,
   (newValue) => {
@@ -347,4 +354,37 @@ const handleSizeChange = (event) => {
     selectedSize.value = "";
   }
 };
+async function copySelectedNoteContent() {
+  if (props.modelValue) {
+    try {
+      const htmlContent = props.modelValue;
+      const blob = new Blob([htmlContent], { type: "text/html" });
+      const clipboardItem = new ClipboardItem({ "text/html": blob });
+      await navigator.clipboard.write([clipboardItem]);
+      copyHtmlTooltip.value = "Copied HTML!";
+    } catch (err) {
+      console.error("Failed to copy HTML content: ", err);
+      try {
+        await navigator.clipboard.writeText(
+          props.modelValue.replace(/<[^>]*>?/gm, "") // Use props.modelValue
+        );
+        copyHtmlTooltip.value = "Copied as plain text (HTML copy failed)";
+      } catch (fallbackErr) {
+        console.error("Fallback plain text copy failed: ", fallbackErr);
+        copyHtmlTooltip.value = "Failed to copy";
+      }
+    }
+  } else {
+    copyHtmlTooltip.value = "Nothing to copy";
+  }
+
+  // Reset tooltip after a delay
+  // Ensure this runs regardless of which path was taken, if the tooltip changed.
+  const initialTooltip = "Copy";
+  if (copyHtmlTooltip.value !== initialTooltip) {
+    setTimeout(() => {
+      copyHtmlTooltip.value = initialTooltip;
+    }, 2500); // Adjust delay as needed
+  }
+}
 </script>

@@ -1,10 +1,10 @@
 <div>
-  <h1>Welcome to Your Notes!</h1>
-  <p>This is a default note to help you get started.</p>
-  <p>You can:</p>
-  <ul>
-    <li>Create new notes.</li>
-    <li>Edit existing notes.</li>
-    <li>Use the editor toolbar to format your text.</li>
-  </ul>
+  <div class="text-xl font-bold text-center">Detailed Issue Tracking Sheet</div>
+  <div class="text-lg">
+    <p>Date: <b id="date"></b></p>
+  </div>
 </div>
+
+<script>
+  date.innerText = new Date().toLocaleDateString();
+</script>

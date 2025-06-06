@@ -1,8 +1,9 @@
 <script setup>
-import { onMounted, ref, watch } from "vue";
+// import initialDefaultNoteContent from "@/assets/default-note.html?raw";
+import { onMounted, ref, watch, computed, createApp } from "vue";
 import { Trash } from "lucide-vue-next";
 import Editor from "@/components/Editor.vue";
-import initialDefaultNoteContent from "@/assets/default-note.html?raw";
+import DefaultNoteComponentDefinition from "@/components/DefaultNote.vue";
 
 const debounce = (func, delay) => {
   let timeout;
@@ -14,16 +15,26 @@ const debounce = (func, delay) => {
   };
 };
 
+const convertVueComponentToHtml = (componentDefinition, props = {}) => {
+  const app = createApp(componentDefinition, props);
+  const tempContainer = document.createElement('div');
+  app.mount(tempContainer);
+  const html = tempContainer.innerHTML;
+  app.unmount();
+  return html;
+};
+
 const DEFAULT_NOTE_ID = "system-default-note-001";
 const defaultNoteObject = {
   id: DEFAULT_NOTE_ID,
-  content: initialDefaultNoteContent,
+  content: convertVueComponentToHtml(DefaultNoteComponentDefinition),
 };
 
 let timeout = undefined;
 const isRemove = ref(false);
 const selectedNote = ref(null);
 const Notes = ref([]);
+const searchQuery = ref("");
 
 const saveNotes = () => {
   localStorage.setItem("notes", JSON.stringify(Notes.value));
@@ -83,15 +94,20 @@ onMounted(() => {
   );
 
   if (defaultNoteIndex === -1) {
-    finalNotes.unshift({ ...defaultNoteObject });
+    // Default note not found in storage, create a new one with fresh content
+    finalNotes.unshift({
+      id: DEFAULT_NOTE_ID,
+      content: convertVueComponentToHtml(DefaultNoteComponentDefinition)
+    });
     Notes.value = finalNotes;
     saveNotes();
   } else {
     const existingDefaultNote = finalNotes.splice(defaultNoteIndex, 1)[0];
     finalNotes.unshift({
-      ...defaultNoteObject,
-      ...existingDefaultNote,
+      ...existingDefaultNote, // Prioritize stored content
       id: DEFAULT_NOTE_ID,
+      // If stored content is empty or falsy, regenerate from component
+      content: existingDefaultNote.content || convertVueComponentToHtml(DefaultNoteComponentDefinition)
     });
     Notes.value = finalNotes;
     if (defaultNoteIndex !== 0) {
@@ -102,6 +118,20 @@ onMounted(() => {
     selectedNote.value =
       Notes.value.find((n) => n.id === DEFAULT_NOTE_ID) || Notes.value[0];
   }
+});
+
+const filteredNotes = computed(() => {
+  if (!searchQuery.value.trim()) {
+    return Notes.value;
+  }
+  const lowerSearchQuery = searchQuery.value.toLowerCase();
+  return Notes.value.filter((note) => {
+    if (note.id === DEFAULT_NOTE_ID) {
+      return "tracking sheet".includes(lowerSearchQuery);
+    }
+    const content = (note.content || "").toLowerCase();
+    return content.includes(lowerSearchQuery);
+  });
 });
 
 const debouncedSavedNotes = debounce(saveNotes, 1000);
@@ -126,6 +156,7 @@ watch(
         <input
           type="search"
           placeholder="Search"
+          v-model="searchQuery"
           class="col-span-5 focus:outline-0 pl-2"
         />
         <button
@@ -138,8 +169,8 @@ watch(
       <ul class="flex-1 pt-1 px-0 space-y-2 overflow-y-scroll">
         <li
           :key="note.id"
-          v-for="(note, index) in Notes"
-          class="bg-base-300 flex justify-between h-8 rounded-lg cursor-pointer"
+          v-for="(note, index) in filteredNotes"
+          class="bg-base-300 flex justify-between h-8 text-lg rounded-lg cursor-pointer"
           :class="{
             'bg-info text-info-content':
               selectedNote && selectedNote.id === note.id,
