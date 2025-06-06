@@ -1,9 +1,9 @@
 <template>
-  <div class="card col-span-1 text-xl">
+  <div class="card col-span-1 text-sm">
     <h1 class="text-center font-bold">Status</h1>
     <div class="grid grid-cols-2">
       <div v-for="stat in Stats" :key="stat.name" class="grid text-center">
-        <h1 class="lg:text-xl text-lg">{{ stat.name }}</h1>
+        <h1 class="lg:text-xl text-sm">{{ stat.name }}</h1>
         <label class="grid text-red-500">
           Failed
           <span class="text-4xl">{{ stat.failed }}</span>

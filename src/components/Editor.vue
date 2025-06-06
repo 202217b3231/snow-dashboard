@@ -60,7 +60,7 @@
     </div>
     <div
       ref="editorDiv"
-      class="h-full p-3 flex-1 outline-none w-270"
+      class="h-full p-3 flex-1 outline-none w-250"
       contentEditable="true"
       @input="emit('update:modelValue', editorDiv ? editorDiv.innerHTML : '')"
     ></div>

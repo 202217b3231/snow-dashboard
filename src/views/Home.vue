@@ -1,5 +1,5 @@
 <template>
-  <div class="p-2">
+  <div class="p-20">
     <p>
       Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusantium
       praesentium vel, eos saepe facere ullam doloribus reprehenderit magni

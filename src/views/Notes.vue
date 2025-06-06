@@ -1,5 +1,4 @@
 <script setup>
-// import initialDefaultNoteContent from "@/assets/default-note.html?raw";
 import { onMounted, ref, watch, computed, createApp } from "vue";
 import { Trash } from "lucide-vue-next";
 import Editor from "@/components/Editor.vue";
@@ -25,10 +24,10 @@ const convertVueComponentToHtml = (componentDefinition, props = {}) => {
 };
 
 const DEFAULT_NOTE_ID = "system-default-note-001";
-const defaultNoteObject = {
-  id: DEFAULT_NOTE_ID,
-  content: convertVueComponentToHtml(DefaultNoteComponentDefinition),
-};
+// const defaultNoteObject = {
+//   id: DEFAULT_NOTE_ID,
+//   content: convertVueComponentToHtml(DefaultNoteComponentDefinition),
+// };
 
 let timeout = undefined;
 const isRemove = ref(false);
@@ -148,7 +147,7 @@ watch(
 
 <template>
   <main class="flex w-full h-full p-3">
-    <aside class="flex flex-col gap-2 max-h-145 w-52">
+    <aside class="flex flex-col gap-2 max-h-145 w-60">
       <label class="input rounded mt-5">
         <button class="label btn text-xl rounded text-info" @click="addNote">
           ➕&#65038;
@@ -170,7 +169,7 @@ watch(
         <li
           :key="note.id"
           v-for="(note, index) in filteredNotes"
-          class="bg-base-300 flex justify-between h-8 text-lg rounded-lg cursor-pointer"
+          class="bg-base-300 flex justify-between h-8 text-sm rounded-lg cursor-pointer"
           :class="{
             'bg-info text-info-content':
               selectedNote && selectedNote.id === note.id,
