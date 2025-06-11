@@ -1,3 +1,7 @@
+chrome.browserAction.onClicked.addListener(()=>{
+  chrome.runtime.openOptionsPage();
+});
+
 function loadScript() {
   const scriptElement = document.createElement("script");
   scriptElement.src = chrome.runtime.getURL("script.js");
